@@ -52,7 +52,10 @@ const legals = [
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; {currentYear} StackedTools. All rights reserved.</p>
+      <div class="footer-bottom-row">
+        <p>&copy; {currentYear} StackedTools. All rights reserved.</p>
+        <p class="made-by">Made with love by <a href="https://github.com/iiamdark" target="_blank" rel="noopener">iiamdark</a></p>
+      </div>
       <p class="affiliate-notice">
         Disclaimer: Some links on this site may be affiliate links. We may earn a commission if you make a purchase through these links at no extra cost to you.
       </p>
@@ -137,6 +140,24 @@ const legals = [
     font-size: var(--text-caption);
     color: var(--color-iron-veil);
     line-height: var(--leading-caption);
+  }
+
+  .footer-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-8);
+  }
+
+  .made-by a {
+    color: var(--color-electric-iris);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: color 200ms ease;
+  }
+  .made-by a:hover {
+    color: var(--color-ember-pulse);
   }
 
   .affiliate-notice {
