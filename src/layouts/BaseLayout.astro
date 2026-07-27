@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SEOHead from '../components/SEOHead.astro';
 import BackToTop from '../components/BackToTop.astro';
+import CookieConsent from '../components/CookieConsent.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -18,7 +19,7 @@ interface Props {
 const { title, description, image, type = 'website', publishDate, updatedDate, authorName } = Astro.props;
 ---
 
-<!html>
+<!DOCTYPE html>
 <html lang="en">
   <SEOHead
     title={title}
@@ -36,5 +37,6 @@ const { title, description, image, type = 'website', publishDate, updatedDate, a
     </main>
     <Footer />
     <BackToTop />
+    <CookieConsent />
   </body>
 </html>
