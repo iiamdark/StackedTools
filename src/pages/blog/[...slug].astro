@@ -1,20 +1,69 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { supabase } from '../../lib/supabase';
+import { marked } from 'marked';
 
 export async function getStaticPaths() {
-	const posts = await getCollection('blog');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
-}
-type Props = CollectionEntry<'blog'>;
+  // 1. Fetch local Markdown posts
+  const localPosts = await getCollection('blog');
+  const localPaths = localPosts.map((post) => ({
+    params: { slug: post.id },
+    props: { type: 'local' as const, post },
+  }));
 
-const post = Astro.props;
-const { Content } = await render(post);
+  // 2. Fetch live published posts from Supabase DB
+  let dbPaths: Array<{ params: { slug: string }; props: any }> = [];
+  try {
+    const { data, error } = await supabase
+      .from('posts')
+      .select('*')
+      .eq('published', true);
+
+    if (!error && data) {
+      dbPaths = data.map((item) => ({
+        params: { slug: item.slug },
+        props: { type: 'db' as const, post: item },
+      }));
+    }
+  } catch (e) {
+    // Graceful fallback
+  }
+
+  return [...localPaths, ...dbPaths];
+}
+
+const props = Astro.props;
+let title = '';
+let description = '';
+let pubDate = new Date();
+let updatedDate: Date | undefined;
+let author = 'StackedTools Team';
+let htmlContent = '';
+let RenderedContent: any = null;
+
+if (props.type === 'local') {
+  const { Content } = await render(props.post);
+  RenderedContent = Content;
+  title = props.post.data.title;
+  description = props.post.data.description;
+  pubDate = props.post.data.pubDate;
+  updatedDate = props.post.data.updatedDate;
+  author = props.post.data.author || 'StackedTools Team';
+} else {
+  title = props.post.title;
+  description = props.post.description;
+  pubDate = new Date(props.post.created_at);
+  updatedDate = props.post.updated_at ? new Date(props.post.updated_at) : undefined;
+  author = props.post.author || 'StackedTools Team';
+  htmlContent = await marked.parse(props.post.content);
+}
 ---
 
-<BlogPost {...post.data}>
-	<Content />
+<BlogPost title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} author={author}>
+  {props.type === 'local' ? (
+    <RenderedContent />
+  ) : (
+    <div set:html={htmlContent} />
+  )}
 </BlogPost>
