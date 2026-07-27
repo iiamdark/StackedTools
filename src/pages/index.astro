@@ -17,6 +17,7 @@ import {
   ArrowRight,
   Layers
 } from 'lucide-astro';
+import NewsletterCTA from '../components/NewsletterCTA.astro';
 
 const posts = await getCollection('blog');
 
@@ -163,6 +164,10 @@ const highlights = [
       </div>
     </div>
   </section>
+
+  <div class="container">
+    <NewsletterCTA />
+  </div>
 </BaseLayout>
 
 <style>

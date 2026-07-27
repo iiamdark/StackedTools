@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /api/
 
-Sitemap: https://stackedtools.online/sitemap-index.xml
+Sitemap: https://stacked-tools.vercel.app/sitemap-index.xml

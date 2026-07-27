@@ -2,6 +2,9 @@
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import AdUnit from '../components/AdUnit.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import NewsletterCTA from '../components/NewsletterCTA.astro';
+import BackToTop from '../components/BackToTop.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
@@ -9,6 +12,7 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
 ---
 
 <BaseLayout title={title} description={description} type="article" publishDate={pubDate} updatedDate={updatedDate} authorName={author}>
+  <ReadingProgress />
   <article class="article-container">
     <div class="container container-article">
       <header class="article-header">
@@ -41,10 +45,13 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
 
       <div class="author-box">
         <h3>About {author}</h3>
-        <p>Expert software reviewer and digital workflow researcher at StackedTools.online. Focused on objective SaaS comparisons and practical automation.</p>
+        <p>Expert software reviewer and digital workflow researcher at StackedTools. Focused on objective SaaS comparisons and practical automation.</p>
       </div>
+
+      <NewsletterCTA />
     </div>
   </article>
+  <BackToTop />
 </BaseLayout>
 
 <style>

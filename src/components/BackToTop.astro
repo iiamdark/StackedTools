@@ -1,0 +1,61 @@
+---
+---
+
+<button class="back-to-top" id="back-to-top" aria-label="Back to top">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 15l-6-6-6 6"/>
+  </svg>
+</button>
+
+<script is:inline>
+  const btn = document.getElementById('back-to-top');
+  if (btn) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 600) {
+        btn.classList.add('visible');
+      } else {
+        btn.classList.remove('visible');
+      }
+    });
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+</script>
+
+<style>
+  .back-to-top {
+    position: fixed;
+    bottom: var(--spacing-32);
+    right: var(--spacing-32);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    background: var(--color-electric-iris);
+    color: var(--color-snow);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 300ms var(--ease-out-strong), transform 300ms var(--ease-out-strong), background 200ms ease;
+    z-index: 50;
+    box-shadow: 0 4px 16px rgba(86, 131, 218, 0.4);
+  }
+
+  .back-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover {
+    background: #6b93e5;
+    transform: translateY(-2px);
+  }
+
+  .back-to-top.visible:hover {
+    transform: translateY(-2px);
+  }
+</style>

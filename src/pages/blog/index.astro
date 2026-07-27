@@ -1,122 +1,153 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { ArrowRight } from 'lucide-astro';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="blog-container">
-				<ul class="blog-grid">
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
-		</main>
-		<Footer />
-	</body>
-</html>
+<BaseLayout title="Blog — StackedTools" description="Latest software reviews, comparisons, and productivity guides from the StackedTools editorial team.">
+	<div class="container blog-container">
+		<header class="blog-header">
+			<h1>Blog</h1>
+			<p class="lead">Latest software reviews, comparisons, and productivity guides.</p>
+		</header>
+
+		<div class="blog-grid">
+			{posts.map((post) => (
+				<div class="double-bezel post-bezel">
+					<article class="blog-card double-bezel-inner">
+						<a href={`/blog/${post.id}/`}>
+							{post.data.heroImage && (
+								<Image width={720} height={360} src={post.data.heroImage} alt="" class="post-image" />
+							)}
+							<h2>{post.data.title}</h2>
+							<p class="post-desc">{post.data.description}</p>
+							<div class="post-meta">
+								<time>{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>
+								<span class="read-link">
+									<span>Read</span>
+									<ArrowRight class="read-icon" />
+								</span>
+							</div>
+						</a>
+					</article>
+				</div>
+			))}
+		</div>
+	</div>
+</BaseLayout>
 
 <style>
 	.blog-container {
-		width: 100%;
+		padding-top: var(--spacing-64);
+		padding-bottom: var(--spacing-160);
 		max-width: 960px;
-		margin: 0 auto;
-		padding: var(--spacing-40) var(--spacing-24);
 	}
-	.blog-grid {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--spacing-32);
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
+
+	.blog-header {
+		margin-bottom: var(--spacing-40);
 	}
-	.blog-grid li {
-		width: calc(50% - var(--spacing-16));
-	}
-	.blog-grid li * {
-		text-decoration: none;
-		transition: 0.2s ease;
-	}
-	.blog-grid li:first-child {
-		width: 100%;
-		margin-bottom: var(--spacing-16);
-		text-align: center;
-	}
-	.blog-grid li:first-child img {
-		width: 100%;
-		border-radius: var(--radius-cards);
-	}
-	.blog-grid li:first-child .title {
-		font-size: 32px;
-	}
-	.blog-grid li img {
-		margin-bottom: var(--spacing-8);
-		border-radius: var(--radius-cards);
-	}
-	.blog-grid li a {
-		display: block;
-	}
-	.title {
-		margin: 0;
+
+	.blog-header h1 {
 		font-family: var(--font-inter);
+		font-size: clamp(28px, 4vw, 40px);
 		font-weight: var(--font-weight-bold);
-		color: var(--text-primary);
-		line-height: 1.2;
-		letter-spacing: -0.02em;
+		margin-bottom: var(--spacing-8);
+		letter-spacing: -0.03em;
 	}
-	.date {
-		margin: 0;
+
+	.lead {
 		font-family: var(--font-inter);
-		color: var(--color-iron-veil);
+		font-size: var(--text-body-lg);
+		color: var(--text-secondary);
+		letter-spacing: var(--tracking-body-lg);
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+		gap: var(--spacing-24);
+	}
+
+	.post-bezel {
+		transition: transform 250ms var(--ease-out-strong), border-color 250ms var(--ease-out-strong);
+	}
+
+	.post-bezel:hover {
+		transform: translateY(-4px);
+		border-color: var(--color-electric-iris);
+	}
+
+	.blog-card a {
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.post-image {
+		width: 100%;
+		height: 200px;
+		object-fit: cover;
+		border-radius: var(--radius-md);
+		margin-bottom: var(--spacing-16);
+	}
+
+	.blog-card h2 {
+		font-family: var(--font-inter);
+		font-size: var(--text-heading-sm);
+		font-weight: var(--font-weight-semibold);
+		margin: 0 0 var(--spacing-8) 0;
+		color: var(--text-primary);
+		letter-spacing: var(--tracking-heading-sm);
+	}
+
+	.post-desc {
+		font-family: var(--font-inter);
 		font-size: var(--text-body);
+		color: var(--text-secondary);
+		margin-bottom: var(--spacing-16);
+		flex: 1;
+		line-height: var(--leading-body);
 		letter-spacing: var(--tracking-body);
 	}
-	.blog-grid li a:hover h4,
-	.blog-grid li a:hover .date {
-		color: var(--color-electric-iris);
+
+	.post-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		border-top: 1px solid var(--border-subtle);
+		padding-top: var(--spacing-12);
+		font-family: var(--font-inter);
+		font-size: var(--text-caption);
+		color: var(--color-iron-veil);
 	}
+
+	.read-link {
+		color: var(--color-electric-iris);
+		font-weight: var(--font-weight-semibold);
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-4);
+	}
+
+	.read-icon {
+		width: 14px;
+		height: 14px;
+		transition: transform 200ms var(--ease-out-strong);
+	}
+
+	.blog-card:hover .read-icon {
+		transform: translateX(3px);
+	}
+
 	@media (max-width: 720px) {
 		.blog-grid {
-			gap: var(--spacing-16);
-		}
-		.blog-grid li {
-			width: 100%;
-			text-align: center;
-		}
-		.blog-grid li:first-child {
-			margin-bottom: 0;
-		}
-		.blog-grid li:first-child .title {
-			font-size: 24px;
+			grid-template-columns: 1fr;
 		}
 	}
 </style>

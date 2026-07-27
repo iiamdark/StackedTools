@@ -15,7 +15,7 @@ interface Props {
 const {
   title,
   description,
-  image = '/images/og-default.png',
+  image = '/og-default.svg',
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
   type = 'website',
   publishDate,
@@ -26,7 +26,6 @@ const {
 const siteName = 'StackedTools';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
-// Schema JSON-LD definition
 const schemaData = type === 'article' ? {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
@@ -56,7 +55,12 @@ const schemaData = type === 'article' ? {
   "@type": "WebSite",
   "name": siteName,
   "url": Astro.site?.href,
-  "description": description
+  "description": description,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": new URL('/search?q={search_term_string}', Astro.site).href,
+    "query-input": "required name=search_term_string"
+  }
 };
 ---
 

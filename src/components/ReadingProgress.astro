@@ -1,0 +1,28 @@
+---
+---
+
+<div class="reading-progress" id="reading-progress"></div>
+
+<script is:inline>
+  const bar = document.getElementById('reading-progress');
+  if (bar) {
+    window.addEventListener('scroll', () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = (window.scrollY / docHeight) * 100;
+      bar.style.width = scrolled + '%';
+    });
+  }
+</script>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--color-electric-iris);
+    z-index: 200;
+    transition: width 50ms linear;
+  }
+</style>
