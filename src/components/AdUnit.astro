@@ -7,22 +7,19 @@ interface Props {
 
 const { slotId, format = 'auto', responsive = true } = Astro.props;
 
-const adsenseClientId = import.meta.env.PUBLIC_ADSENSE_CLIENT_ID || "";
-const isProduction = adsenseClientId && adsenseClientId !== "ca-pub-XXXXXXXXXXXXXXXX";
+const adsenseClientId = "ca-pub-1833177286907117";
 ---
 
-{isProduction ? (
-  <div class="ad-unit-container">
-    <span class="ad-label">Advertisement</span>
-    <ins class="adsbygoogle"
-         style="display:block; text-align:center;"
-         data-ad-client={adsenseClientId}
-         data-ad-slot={slotId}
-         data-ad-format={format}
-         data-full-width-responsive={responsive ? "true" : "false"}>
-    </ins>
-    <script is:inline>
-      (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-  </div>
-) : null}
+<div class="ad-unit-container">
+  <span class="ad-label">Advertisement</span>
+  <ins class="adsbygoogle"
+       style="display:block; text-align:center;"
+       data-ad-client={adsenseClientId}
+       data-ad-slot={slotId}
+       data-ad-format={format}
+       data-full-width-responsive={responsive ? "true" : "false"}>
+  </ins>
+  <script is:inline>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
