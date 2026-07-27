@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
+import AdUnit from '../components/AdUnit.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import NewsletterCTA from '../components/NewsletterCTA.astro';
 import BackToTop from '../components/BackToTop.astro';
@@ -34,9 +35,13 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
         </div>
       </header>
 
+      <AdUnit slotId="1000000001" format="auto" />
+
       <div class="article-body prose">
         <slot />
       </div>
+
+      <AdUnit slotId="1000000002" format="auto" />
 
       <div class="author-box">
         <h3>About {author}</h3>
