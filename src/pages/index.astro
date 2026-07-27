@@ -1,15 +1,38 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
+import { 
+  Bot, 
+  Zap, 
+  GitCompare, 
+  Workflow, 
+  Briefcase, 
+  BookOpen, 
+  ArrowUpRight, 
+  Sparkles, 
+  ShieldCheck, 
+  Flame, 
+  TrendingUp, 
+  Search, 
+  ArrowRight,
+  Layers
+} from 'lucide-astro';
 
 const posts = await getCollection('blog');
+
 const categories = [
-  { name: 'AI Tools', slug: 'ai-tools', desc: 'Reviews & comparisons of cutting-edge AI software', icon: '🤖', badge: 'Popular' },
-  { name: 'Productivity', slug: 'productivity', desc: 'Task management, note-taking & workflow systems', icon: '⚡', badge: 'High CPC' },
-  { name: 'Comparisons', slug: 'comparisons', desc: 'Head-to-head software showdowns and alternatives', icon: '⚔️', badge: 'Buying Intent' },
-  { name: 'Automation', slug: 'automation', desc: 'No-code tools, API integrations & automated workflows', icon: '🔄', badge: 'Trending' },
-  { name: 'Business Software', slug: 'business-software', desc: 'CRMs, email marketing & business operations', icon: '💼', badge: 'B2B' },
-  { name: 'Guides & Tutorials', slug: 'guides', desc: 'Actionable walkthroughs and step-by-step masterclasses', icon: '📚', badge: 'How-To' },
+  { name: 'AI Tools', slug: 'ai-tools', desc: 'Reviews & comparisons of cutting-edge AI software', icon: Bot, badge: 'Popular', color: 'blue' },
+  { name: 'Productivity', slug: 'productivity', desc: 'Task management, note-taking & workflow systems', icon: Zap, badge: 'High CPC', color: 'purple' },
+  { name: 'Comparisons', slug: 'comparisons', desc: 'Head-to-head software showdowns and alternatives', icon: GitCompare, badge: 'Buying Intent', color: 'green' },
+  { name: 'Automation', slug: 'automation', desc: 'No-code tools, API integrations & automated workflows', icon: Workflow, badge: 'Trending', color: 'amber' },
+  { name: 'Business Software', slug: 'business-software', desc: 'CRMs, email marketing & business operations', icon: Briefcase, badge: 'B2B', color: 'blue' },
+  { name: 'Guides & Tutorials', slug: 'guides', desc: 'Actionable walkthroughs and step-by-step masterclasses', icon: BookOpen, badge: 'How-To', color: 'purple' },
+];
+
+const highlights = [
+  { icon: Sparkles, title: 'Zero AI Slop', desc: 'Verified data, honest benchmarks, zero fluff.' },
+  { icon: ShieldCheck, title: 'E-E-A-T Verified', desc: 'Tested by software engineers and digital architects.' },
+  { icon: TrendingUp, title: 'High Intent', desc: 'Real pricing, active discounts, and direct comparisons.' },
 ];
 ---
 
@@ -19,27 +42,52 @@ const categories = [
 >
   {/* Hero Section */}
   <section class="hero-section">
-    <div class="container">
-      <div class="hero-badge">
-        <span class="badge badge-purple">✨ StackedTools Portal</span>
+    <div class="container hero-container">
+      <div class="hero-badge-wrapper">
+        <div class="badge badge-purple animate-pulse-subtle">
+          <Sparkles class="badge-icon" />
+          <span>StackedTools Portal 2026</span>
+        </div>
       </div>
+      
       <h1 class="hero-title">
         Discover, Compare & Master <br />
         <span class="hero-gradient">The Best Digital Tools</span>
       </h1>
+      
       <p class="hero-subtitle">
-        In-depth reviews, head-to-head comparisons, and no-code automation guides for modern creators, freelancers, and growth teams.
+        In-depth reviews, head-to-head software comparisons, and no-code automation guides for modern creators, developers, and growth teams.
       </p>
       
       <div class="hero-actions">
         <a href="#categories" class="btn-tactile btn-primary-tactile">
           <span>Explore Categories</span>
-          <div class="btn-icon-wrapper">↓</div>
+          <div class="btn-icon-wrapper">
+            <ArrowRight class="btn-icon" />
+          </div>
         </a>
         <a href="/about" class="btn-tactile btn-secondary-tactile">
+          <ShieldCheck class="btn-left-icon" />
           <span>Editorial Standards</span>
-          <div class="btn-icon-wrapper">→</div>
         </a>
+      </div>
+
+      {/* Highlights Bar */}
+      <div class="hero-highlights">
+        {highlights.map(item => {
+          const Icon = item.icon;
+          return (
+            <div class="highlight-item">
+              <div class="highlight-icon-box">
+                <Icon class="highlight-icon" />
+              </div>
+              <div class="highlight-text">
+                <span class="highlight-title">{item.title}</span>
+                <span class="highlight-desc">{item.desc}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -48,27 +96,36 @@ const categories = [
   <section id="categories" class="categories-section">
     <div class="container">
       <div class="section-header">
+        <div class="section-eyebrow">
+          <Layers class="eyebrow-icon" />
+          <span>Core Silos</span>
+        </div>
         <h2>Browse by Category</h2>
         <p>Explore our curated silos of software reviews and technical breakdowns.</p>
       </div>
 
       <div class="category-grid">
-        {categories.map((cat) => (
-          <div class="double-bezel">
-            <a href={`/${cat.slug}`} class="cat-card double-bezel-inner">
-              <div class="cat-top">
-                <span class="cat-icon">{cat.icon}</span>
-                <span class="badge">{cat.badge}</span>
-              </div>
-              <h3>{cat.name}</h3>
-              <p>{cat.desc}</p>
-              <div class="cat-link">
-                <span>View tools</span>
-                <span class="arrow">↗</span>
-              </div>
-            </a>
-          </div>
-        ))}
+        {categories.map((cat) => {
+          const Icon = cat.icon;
+          return (
+            <div class="double-bezel cat-bezel">
+              <a href={`/${cat.slug}`} class="cat-card double-bezel-inner">
+                <div class="cat-top">
+                  <div class="cat-icon-wrapper">
+                    <Icon class="cat-icon" />
+                  </div>
+                  <span class="badge">{cat.badge}</span>
+                </div>
+                <h3>{cat.name}</h3>
+                <p>{cat.desc}</p>
+                <div class="cat-link">
+                  <span>View tools</span>
+                  <ArrowUpRight class="cat-arrow" />
+                </div>
+              </a>
+            </div>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -77,13 +134,17 @@ const categories = [
   <section class="posts-section">
     <div class="container">
       <div class="section-header">
+        <div class="section-eyebrow">
+          <Flame class="eyebrow-icon" />
+          <span>Fresh Content</span>
+        </div>
         <h2>Latest Articles & Reviews</h2>
         <p>Fresh insights verified by our software editorial team.</p>
       </div>
 
       <div class="posts-grid">
         {posts.map((post) => (
-          <div class="double-bezel">
+          <div class="double-bezel post-bezel">
             <article class="article-card double-bezel-inner">
               <a href={`/blog/${post.slug}/`}>
                 <div class="card-meta">
@@ -94,7 +155,10 @@ const categories = [
                 <p>{post.data.description}</p>
                 <div class="card-footer">
                   <span class="author">By {post.data.author || 'StackedTools Team'}</span>
-                  <span class="read-link">Read post &rarr;</span>
+                  <span class="read-link">
+                    <span>Read post</span>
+                    <ArrowRight class="read-icon" />
+                  </span>
                 </div>
               </a>
             </article>
@@ -110,27 +174,40 @@ const categories = [
   .hero-section {
     padding: 6rem 0 5rem;
     text-align: center;
+    position: relative;
   }
 
-  .hero-badge {
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-badge-wrapper {
     margin-bottom: 1.5rem;
+  }
+
+  .badge-icon {
+    width: 0.875rem;
+    height: 0.875rem;
   }
 
   .hero-title {
     font-size: clamp(2.5rem, 6vw, 4.25rem);
     font-weight: 800;
     line-height: 1.12;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.04em;
   }
 
   .hero-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, var(--accent-blue) 50%, var(--accent-purple) 100%);
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent-blue) 45%, var(--accent-purple) 90%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
   .hero-subtitle {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     color: var(--text-secondary);
     max-width: 680px;
     margin: 0 auto 2.75rem;
@@ -140,12 +217,97 @@ const categories = [
   .hero-actions {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 1.25rem;
+    margin-bottom: 4rem;
+  }
+
+  .btn-left-icon {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--accent-blue);
+  }
+
+  .btn-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  /* Highlights Bar */
+  .hero-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 960px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-outer);
+    padding: 1.5rem 2rem;
+    backdrop-filter: var(--glass-backdrop);
+  }
+
+  .highlight-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .highlight-icon-box {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-sm);
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-blue);
+    flex-shrink: 0;
+  }
+
+  .highlight-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  .highlight-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .highlight-title {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+  }
+
+  .highlight-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
   }
 
   /* Section Common */
   .section-header {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-blue);
+    margin-bottom: 0.75rem;
+  }
+
+  .eyebrow-icon {
+    width: 0.875rem;
+    height: 0.875rem;
   }
 
   .section-header h2 {
@@ -169,6 +331,15 @@ const categories = [
     gap: 1.75rem;
   }
 
+  .cat-bezel {
+    transition: transform 250ms var(--ease-out-strong), border-color 250ms var(--ease-out-strong);
+  }
+
+  .cat-bezel:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-blue);
+  }
+
   .cat-card {
     display: flex;
     flex-direction: column;
@@ -182,8 +353,27 @@ const categories = [
     margin-bottom: 1.25rem;
   }
 
+  .cat-icon-wrapper {
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-inner);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent-blue);
+    transition: background-color 200ms var(--ease-out-strong), color 200ms var(--ease-out-strong);
+  }
+
+  .cat-card:hover .cat-icon-wrapper {
+    background: var(--accent-blue);
+    color: #ffffff;
+  }
+
   .cat-icon {
-    font-size: 2.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
   }
 
   .cat-card h3 {
@@ -210,8 +400,14 @@ const categories = [
     transition: gap 200ms var(--ease-out-strong);
   }
 
-  .cat-card:hover .cat-link {
-    gap: 0.625rem;
+  .cat-arrow {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 200ms var(--ease-out-strong);
+  }
+
+  .cat-card:hover .cat-arrow {
+    transform: translate(2px, -2px);
   }
 
   /* Posts Section */
@@ -224,6 +420,15 @@ const categories = [
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 1.75rem;
+  }
+
+  .post-bezel {
+    transition: transform 250ms var(--ease-out-strong), border-color 250ms var(--ease-out-strong);
+  }
+
+  .post-bezel:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent-purple);
   }
 
   .article-card a {
@@ -271,11 +476,30 @@ const categories = [
   .read-link {
     color: var(--accent-purple);
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
 
-  @media (max-width: 768px) {
+  .read-icon {
+    width: 0.875rem;
+    height: 0.875rem;
+    transition: transform 200ms var(--ease-out-strong);
+  }
+
+  .article-card:hover .read-icon {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 868px) {
+    .hero-highlights {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
     .hero-actions {
       flex-direction: column;
+      width: 100%;
     }
   }
 </style>
