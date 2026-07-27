@@ -1,153 +1,384 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { ArrowRight } from 'lucide-astro';
+import { BookOpen, ArrowRight, Clock, Tag, Sparkles, Filter } from 'lucide-astro';
 
-const posts = (await getCollection('blog')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const categories = [
+  { name: 'All', slug: 'all' },
+  { name: 'AI Tools', slug: 'ai-tools' },
+  { name: 'Comparisons', slug: 'comparisons' },
+  { name: 'Productivity', slug: 'productivity' },
+  { name: 'Automation', slug: 'automation' },
+  { name: 'Guides', slug: 'guides' },
+  { name: 'Business', slug: 'business-software' },
+];
+
+const categoryColors: Record<string, string> = {
+  'ai-tools': '#8b5cf6',
+  'comparisons': '#5683da',
+  'productivity': '#f59e0b',
+  'automation': '#10b981',
+  'guides': '#f472b6',
+  'business-software': '#ef4444',
+};
+
+function estimateReadingTime(body: string): number {
+  const words = body.split(/\s+/).length;
+  return Math.max(3, Math.round(words / 200));
+}
+
+const posts = allPosts.map(p => ({
+  ...p,
+  readingTime: estimateReadingTime(p.body || ''),
+}));
+
+const featured = posts[0];
+const rest = posts.slice(1);
 ---
 
-<BaseLayout title="Blog — StackedTools" description="Latest software reviews, comparisons, and productivity guides from the StackedTools editorial team.">
-	<div class="container blog-container">
-		<header class="blog-header">
-			<h1>Blog</h1>
-			<p class="lead">Latest software reviews, comparisons, and productivity guides.</p>
-		</header>
+<BaseLayout title="Blog — StackedTools" description="In-depth software reviews, honest comparisons, and actionable productivity guides. Zero filler, real data.">
 
-		<div class="blog-grid">
-			{posts.map((post) => (
-				<div class="double-bezel post-bezel">
-					<article class="blog-card double-bezel-inner">
-						<a href={`/blog/${post.id}/`}>
-							{post.data.heroImage && (
-								<Image width={720} height={360} src={post.data.heroImage} alt="" class="post-image" />
-							)}
-							<h2>{post.data.title}</h2>
-							<p class="post-desc">{post.data.description}</p>
-							<div class="post-meta">
-								<time>{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>
-								<span class="read-link">
-									<span>Read</span>
-									<ArrowRight class="read-icon" />
-								</span>
-							</div>
-						</a>
-					</article>
-				</div>
-			))}
-		</div>
-	</div>
+  <!-- ============ HERO ============ -->
+  <section class="blog-hero">
+    <div class="hero-bg-glow" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-badge anim-fade-up" style="--delay:.1s">
+        <Sparkles class="hero-badge-icon" />
+        <span>Blog & Reviews</span>
+      </div>
+      <h1 class="anim-fade-up" style="--delay:.2s">Software Reviews That<br/><span class="hero-gradient">Actually Help You Decide</span></h1>
+      <p class="hero-sub anim-fade-up" style="--delay:.35s">Honest, data-driven comparisons and guides. No AI slop, no sponsored rankings.</p>
+
+      <!-- Stats -->
+      <div class="blog-stats anim-fade-up" style="--delay:.5s">
+        <div class="stat-pill"><span class="stat-num">{allPosts.length}</span> Articles</div>
+        <div class="stat-pill"><span class="stat-num">6</span> Categories</div>
+        <div class="stat-pill"><span class="stat-num">2026</span> Updated</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container blog-page">
+
+    <!-- ============ FILTERS ============ -->
+    <div class="filter-bar reveal" id="filter-bar">
+      <Filter class="filter-icon" />
+      <div class="filter-pills">
+        {categories.map(cat => (
+          <button class={`filter-pill ${cat.slug === 'all' ? 'active' : ''}`} data-cat={cat.slug}>
+            {cat.name}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- ============ FEATURED POST ============ -->
+    {featured && (
+      <a href={`/blog/${featured.id}/`} class="featured-card reveal" data-cat={featured.data.category}>
+        <div class="featured-inner double-bezel">
+          <div class="featured-content">
+            <div class="featured-meta">
+              <span class="cat-badge" style={`--cat-color:${categoryColors[featured.data.category] || '#5683da'}`}>
+                <Tag class="cat-badge-icon" />
+                {(featured.data.category || 'Review').replace('-', ' ')}
+              </span>
+              <span class="reading-time"><Clock class="rt-icon" /> {featured.readingTime} min read</span>
+            </div>
+            <h2>{featured.data.title}</h2>
+            <p>{featured.data.description}</p>
+            <div class="featured-footer">
+              <time>{featured.data.pubDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</time>
+              <span class="read-cta">Read article <ArrowRight class="cta-arrow" /></span>
+            </div>
+          </div>
+          <div class="featured-visual">
+            <div class="featured-icon-glow" style={`--cat-color:${categoryColors[featured.data.category] || '#5683da'}`}></div>
+            <BookOpen class="featured-big-icon" />
+          </div>
+        </div>
+      </a>
+    )}
+
+    <!-- ============ POSTS GRID ============ -->
+    <div class="posts-grid" id="posts-grid">
+      {rest.map((post, i) => (
+        <a href={`/blog/${post.id}/`} class="post-card reveal" data-cat={post.data.category} style={`--delay:${Math.min(i * 0.06, 0.3)}s`}>
+          <div class="post-card-inner">
+            <div class="post-card-top">
+              <span class="cat-badge small" style={`--cat-color:${categoryColors[post.data.category] || '#5683da'}`}>
+                {(post.data.category || 'Review').replace('-', ' ')}
+              </span>
+              <span class="reading-time small"><Clock class="rt-icon" /> {post.readingTime}m</span>
+            </div>
+            <h3>{post.data.title}</h3>
+            <p>{post.data.description}</p>
+            <div class="post-card-footer">
+              <time>{post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</time>
+              <ArrowRight class="post-arrow" />
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="empty-state" style="display:none">
+      <BookOpen class="empty-icon" />
+      <h3>No articles found</h3>
+      <p>Try selecting a different category.</p>
+    </div>
+
+  </div>
 </BaseLayout>
 
+<script is:inline>
+  // Category filter
+  const pills = document.querySelectorAll('.filter-pill');
+  const cards = document.querySelectorAll('[data-cat]');
+  const emptyState = document.getElementById('empty-state');
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const slug = pill.dataset.cat;
+      let visible = 0;
+      cards.forEach(card => {
+        if (slug === 'all' || card.dataset.cat === slug) {
+          card.style.display = '';
+          visible++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      if (emptyState) emptyState.style.display = visible === 0 ? '' : 'none';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => io.observe(el));
+</script>
+
 <style>
-	.blog-container {
-		padding-top: var(--spacing-64);
-		padding-bottom: var(--spacing-160);
-		max-width: 960px;
-	}
+  /* ── HERO ── */
+  .blog-hero {
+    position: relative;
+    z-index: 1;
+    padding: 160px 0 40px;
+    text-align: center;
+    overflow: hidden;
+  }
+  .hero-bg-glow {
+    position: absolute;
+    top: -30%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(86,131,218,0.15) 0%, rgba(139,92,246,0.06) 50%, transparent 70%);
+    filter: blur(60px); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: var(--radius-full);
+    background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2);
+    color: #a78bfa; font-family: var(--font-inter); font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    margin-bottom: var(--spacing-16);
+  }
+  .hero-badge-icon { width: 12px; height: 12px; }
+  .blog-hero h1 {
+    font-family: var(--font-inter); font-weight: 800;
+    font-size: clamp(28px, 5vw, 52px); line-height: 1.1;
+    letter-spacing: -0.04em; margin-bottom: var(--spacing-12);
+  }
+  .hero-gradient {
+    background: linear-gradient(135deg, #8b5cf6 0%, var(--color-electric-iris) 50%, var(--color-ember-pulse) 100%);
+    background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: heroGrad 6s ease infinite;
+  }
+  @keyframes heroGrad { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+  .hero-sub {
+    font-family: var(--font-inter); font-size: var(--text-body-lg);
+    color: var(--text-secondary); max-width: 500px; margin: 0 auto var(--spacing-20);
+  }
+  .blog-stats { display: flex; justify-content: center; gap: var(--spacing-8); flex-wrap: wrap; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 14px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    font-family: var(--font-inter); font-size: 12px; color: var(--text-secondary);
+  }
+  .stat-num { font-weight: 700; color: var(--text-primary); }
 
-	.blog-header {
-		margin-bottom: var(--spacing-40);
-	}
+  .anim-fade-up {
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) forwards;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-	.blog-header h1 {
-		font-family: var(--font-inter);
-		font-size: clamp(28px, 4vw, 40px);
-		font-weight: var(--font-weight-bold);
-		margin-bottom: var(--spacing-8);
-		letter-spacing: -0.03em;
-	}
+  /* ── FILTERS ── */
+  .blog-page { padding-bottom: var(--spacing-160); }
+  .filter-bar {
+    display: flex; align-items: center; gap: var(--spacing-12);
+    margin-bottom: var(--spacing-32);
+    padding: var(--spacing-8) var(--spacing-12);
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-cards);
+  }
+  .filter-icon { width: 16px; height: 16px; color: var(--color-iron-veil); min-width: 16px; }
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-pill {
+    padding: 6px 14px; border-radius: var(--radius-full);
+    background: transparent; border: 1px solid transparent;
+    color: var(--text-secondary); font-family: var(--font-inter);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    transition: all 200ms ease;
+  }
+  .filter-pill:hover { background: rgba(255,255,255,0.04); color: var(--text-primary); }
+  .filter-pill.active {
+    background: var(--color-electric-iris); color: #fff;
+    border-color: var(--color-electric-iris);
+  }
 
-	.lead {
-		font-family: var(--font-inter);
-		font-size: var(--text-body-lg);
-		color: var(--text-secondary);
-		letter-spacing: var(--tracking-body-lg);
-	}
+  /* ── FEATURED ── */
+  .featured-card {
+    display: block; text-decoration: none; margin-bottom: var(--spacing-32);
+  }
+  .featured-inner {
+    display: grid; grid-template-columns: 1fr 280px;
+    min-height: 320px; overflow: hidden;
+    transition: transform 300ms var(--ease-out-strong), border-color 300ms var(--ease-out-strong);
+  }
+  .featured-card:hover .featured-inner { transform: translateY(-4px); border-color: var(--color-electric-iris); }
+  .featured-content {
+    padding: var(--spacing-32);
+    display: flex; flex-direction: column;
+  }
+  .featured-meta { display: flex; align-items: center; gap: var(--spacing-12); margin-bottom: var(--spacing-16); }
+  .cat-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--cat-color) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cat-color) 25%, transparent);
+    color: var(--cat-color); font-family: var(--font-inter);
+    font-size: 11px; font-weight: 600; text-transform: capitalize;
+    letter-spacing: 0.03em;
+  }
+  .cat-badge.small { font-size: 10px; padding: 2px 8px; }
+  .cat-badge-icon { width: 10px; height: 10px; }
+  .reading-time {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: var(--font-inter); font-size: 12px; color: var(--color-iron-veil);
+  }
+  .reading-time.small { font-size: 11px; }
+  .rt-icon { width: 12px; height: 12px; }
+  .featured-content h2 {
+    font-family: var(--font-inter); font-size: clamp(20px, 2.5vw, 28px);
+    font-weight: 700; color: var(--text-primary); margin-bottom: var(--spacing-8);
+    letter-spacing: -0.02em; line-height: 1.2;
+  }
+  .featured-content p {
+    font-family: var(--font-inter); font-size: var(--text-body);
+    color: var(--text-secondary); line-height: 1.5; flex: 1;
+  }
+  .featured-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: var(--spacing-12); border-top: 1px solid var(--border-subtle);
+    font-family: var(--font-inter); font-size: 13px; color: var(--color-iron-veil);
+  }
+  .read-cta {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--color-electric-iris); font-weight: 600;
+  }
+  .cta-arrow { width: 14px; height: 14px; transition: transform 200ms ease; }
+  .featured-card:hover .cta-arrow { transform: translateX(3px); }
 
-	.blog-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-		gap: var(--spacing-24);
-	}
+  .featured-visual {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.02);
+    border-left: 1px solid var(--border-subtle);
+    overflow: hidden;
+  }
+  .featured-icon-glow {
+    position: absolute; width: 120px; height: 120px; border-radius: 50%;
+    background: var(--cat-color); opacity: 0.12; filter: blur(40px);
+  }
+  .featured-big-icon { width: 64px; height: 64px; color: var(--cat-color, var(--color-electric-iris)); opacity: 0.4; }
 
-	.post-bezel {
-		transition: transform 250ms var(--ease-out-strong), border-color 250ms var(--ease-out-strong);
-	}
+  /* ── GRID ── */
+  .posts-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-16);
+  }
+  .post-card {
+    text-decoration: none;
+  }
+  .post-card-inner {
+    padding: var(--spacing-24);
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-cards);
+    display: flex; flex-direction: column; height: 100%;
+    transition: all 250ms var(--ease-out-strong);
+  }
+  .post-card:hover .post-card-inner {
+    transform: translateY(-4px);
+    border-color: var(--color-electric-iris);
+    box-shadow: 0 12px 32px rgba(86,131,218,0.1);
+  }
+  .post-card-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: var(--spacing-12);
+  }
+  .post-card h3 {
+    font-family: var(--font-inter); font-size: 17px; font-weight: 600;
+    color: var(--text-primary); margin-bottom: var(--spacing-8);
+    line-height: 1.3; letter-spacing: -0.01em;
+  }
+  .post-card p {
+    font-family: var(--font-inter); font-size: 13px; color: var(--text-secondary);
+    line-height: 1.55; flex: 1; margin-bottom: var(--spacing-12);
+  }
+  .post-card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: var(--spacing-10); border-top: 1px solid var(--border-subtle);
+    font-family: var(--font-inter); font-size: 12px; color: var(--color-iron-veil);
+  }
+  .post-arrow { width: 14px; height: 14px; color: var(--color-electric-iris); transition: transform 200ms ease; }
+  .post-card:hover .post-arrow { transform: translateX(3px); }
 
-	.post-bezel:hover {
-		transform: translateY(-4px);
-		border-color: var(--color-electric-iris);
-	}
+  /* ── EMPTY ── */
+  .empty-state {
+    text-align: center; padding: var(--spacing-64) 0;
+    color: var(--text-secondary);
+  }
+  .empty-icon { width: 48px; height: 48px; margin-bottom: var(--spacing-12); opacity: 0.3; }
+  .empty-state h3 { font-family: var(--font-inter); font-size: 18px; margin-bottom: 6px; color: var(--text-primary); }
+  .empty-state p { font-family: var(--font-inter); font-size: 14px; }
 
-	.blog-card a {
-		text-decoration: none;
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-	}
+  /* ── REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.5s cubic-bezier(0.23,1,0.32,1), transform 0.5s cubic-bezier(0.23,1,0.32,1);
+    transition-delay: var(--delay, 0s);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
 
-	.post-image {
-		width: 100%;
-		height: 200px;
-		object-fit: cover;
-		border-radius: var(--radius-md);
-		margin-bottom: var(--spacing-16);
-	}
-
-	.blog-card h2 {
-		font-family: var(--font-inter);
-		font-size: var(--text-heading-sm);
-		font-weight: var(--font-weight-semibold);
-		margin: 0 0 var(--spacing-8) 0;
-		color: var(--text-primary);
-		letter-spacing: var(--tracking-heading-sm);
-	}
-
-	.post-desc {
-		font-family: var(--font-inter);
-		font-size: var(--text-body);
-		color: var(--text-secondary);
-		margin-bottom: var(--spacing-16);
-		flex: 1;
-		line-height: var(--leading-body);
-		letter-spacing: var(--tracking-body);
-	}
-
-	.post-meta {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		border-top: 1px solid var(--border-subtle);
-		padding-top: var(--spacing-12);
-		font-family: var(--font-inter);
-		font-size: var(--text-caption);
-		color: var(--color-iron-veil);
-	}
-
-	.read-link {
-		color: var(--color-electric-iris);
-		font-weight: var(--font-weight-semibold);
-		display: flex;
-		align-items: center;
-		gap: var(--spacing-4);
-	}
-
-	.read-icon {
-		width: 14px;
-		height: 14px;
-		transition: transform 200ms var(--ease-out-strong);
-	}
-
-	.blog-card:hover .read-icon {
-		transform: translateX(3px);
-	}
-
-	@media (max-width: 720px) {
-		.blog-grid {
-			grid-template-columns: 1fr;
-		}
-	}
+  /* ── RESPONSIVE ── */
+  @media (max-width: 868px) {
+    .blog-hero { padding: 140px 0 30px; }
+    .featured-inner { grid-template-columns: 1fr; }
+    .featured-visual { display: none; }
+    .posts-grid { grid-template-columns: 1fr; }
+  }
 </style>

@@ -1,6 +1,51 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { BookOpen, ExternalLink, ArrowRight, Search, Zap, Bot } from 'lucide-astro';
+import { BookOpen, ExternalLink, Sparkles, Code, Zap, Bot, Palette, BarChart3, Shield, Globe, Terminal, Layers, Mail, Database, GitCompare, Calendar } from 'lucide-astro';
+
+const categories = [
+  {
+    name: 'Desarrollo',
+    description: 'Herramientas core para construir software moderno',
+    color: '#5683da',
+    icon: Code,
+    tools: [
+      { name: 'Cursor', desc: 'AI code editor con Composer para ediciones multi-archivo', url: 'https://cursor.com', icon: Terminal, tag: 'AI Editor' },
+      { name: 'Vercel', desc: 'Deploy instantáneo para Next.js, Astro, SvelteKit', url: 'https://vercel.com', icon: Layers, tag: 'Deploy' },
+      { name: 'Supabase', desc: 'Backend open source: PostgreSQL, Auth, Storage, Edge Functions', url: 'https://supabase.com', icon: Database, tag: 'BaaS' },
+      { name: 'Linear', desc: 'Issue tracker rápido para equipos de ingeniería', url: 'https://linear.app', icon: GitCompare, tag: 'Project Mgmt' },
+      { name: 'GitHub Copilot', desc: 'AI pair programmer inline en tu editor', url: 'https://github.com/features/copilot', icon: Bot, tag: 'AI Coding' },
+      { name: 'Railway', desc: 'Deploy de apps fullstack con databases managed', url: 'https://railway.app', icon: Zap, tag: 'Hosting' },
+    ],
+  },
+  {
+    name: 'Productividad',
+    description: 'Organiza tu trabajo y maximiza tu tiempo',
+    color: '#f59e0b',
+    icon: Zap,
+    tools: [
+      { name: 'Raycast', desc: 'Launcher macOS con AI, snippets y extensiones', url: 'https://raycast.com', icon: Zap, tag: 'Launcher' },
+      { name: 'Notion', desc: 'All-in-one workspace: notas, databases, project management', url: 'https://notion.so', icon: BookOpen, tag: 'Workspace' },
+      { name: 'Todoist', desc: 'Gestor de tareas con NLP y vistas múltiples', url: 'https://todoist.com', icon: BarChart3, tag: 'Tasks' },
+      { name: 'Arc Browser', desc: 'Browser con sidebar, Spaces y AI integrado', url: 'https://arc.net', icon: Globe, tag: 'Browser' },
+      { name: '1Password', desc: 'Password manager con passkeys y team sharing', url: 'https://1password.com', icon: Shield, tag: 'Security' },
+      { name: 'Cal.com', desc: 'Scheduling open source auto-hosted', url: 'https://cal.com', icon: Calendar, tag: 'Scheduling' },
+    ],
+  },
+  {
+    name: 'Automatización',
+    description: 'Conecta tus apps y elimina trabajo manual',
+    color: '#10b981',
+    icon: Bot,
+    tools: [
+      { name: 'Zapier', desc: '6,000+ integraciones no-code para conectar todo', url: 'https://zapier.com', icon: Zap, tag: 'No-Code' },
+      { name: 'Make', desc: 'Automatización visual con flujos complejos', url: 'https://make.com', icon: Layers, tag: 'Visual' },
+      { name: 'n8n', desc: 'Automatización open source self-hosted', url: 'https://n8n.io', icon: Terminal, tag: 'Open Source' },
+      { name: 'Resend', desc: 'Email transaccional con API moderna y React Email', url: 'https://resend.com', icon: Mail, tag: 'Email' },
+      { name: 'Upstash', desc: 'Serverless Redis y QStash para queues', url: 'https://upstash.com', icon: Database, tag: 'Serverless' },
+      { name: 'Pipedream', desc: 'Connect APIs with code when you need it', url: 'https://pipedream.com', icon: Code, tag: 'API' },
+    ],
+  },
+];
 ---
 
 <BaseLayout
@@ -8,239 +53,223 @@ import { BookOpen, ExternalLink, ArrowRight, Search, Zap, Bot } from 'lucide-ast
   description="Herramientas, guías y recursos útiles para desarrolladores, creadores y equipos de productividad."
 >
 
+  <!-- ============ HERO ============ -->
   <section class="recursos-hero">
+    <div class="hero-bg-glow" aria-hidden="true"></div>
     <div class="container">
-      <div class="section-eyebrow">
-        <Zap class="eyebrow-icon" />
-        <span>Recursos</span>
+      <div class="hero-badge anim-fade-up" style="--delay:.1s">
+        <Sparkles class="hero-badge-icon" />
+        <span>Curated Tools</span>
       </div>
-      <h1>Recursos y Herramientas Útiles</h1>
-      <p>Compilación de las mejores herramientas, plantillas y guías que nuestro equipo usa y recomienda.</p>
+      <h1 class="anim-fade-up" style="--delay:.2s">
+        Herramientas que<br/>
+        <span class="hero-gradient">nuestro equipo usa a diario</span>
+      </h1>
+      <p class="hero-sub anim-fade-up" style="--delay:.35s">
+        Recomendaciones reales, sin patrocinios. Cada herramienta ha sido probada por nuestro equipo en proyectos reales.
+      </p>
+      <div class="hero-stats anim-fade-up" style="--delay:.5s">
+        <div class="stat-pill"><span class="stat-num">{categories.reduce((a, c) => a + c.tools.length, 0)}</span> Herramientas</div>
+        <div class="stat-pill"><span class="stat-num">{categories.length}</span> Categorías</div>
+        <div class="stat-pill"><span class="stat-num">100%</span> Probadas</div>
+      </div>
     </div>
   </section>
 
-  <section class="recursos-grid-section">
-    <div class="container">
-
-      <div class="resource-category">
-        <h2>Desarrollo</h2>
-        <div class="resource-list">
-          <a href="https://cursor.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Bot class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Cursor</h3>
-              <p>AI code editor basado en VS Code con Composer para ediciones multi-archivo.</p>
+  <!-- ============ CATEGORIES ============ -->
+  <div class="container recursos-page">
+    {categories.map((cat, ci) => {
+      const CatIcon = cat.icon;
+      return (
+        <section class="category-section reveal" style={`--delay:${ci * 0.1}s`}>
+          <div class="category-header">
+            <div class="category-icon-box" style={`--cat-color:${cat.color}`}>
+              <CatIcon class="category-icon" />
             </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://vercel.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Vercel</h3>
-              <p>Plataforma de deploy para frameworks modernos. Next.js, Astro, SvelteKit.</p>
+            <div>
+              <h2>{cat.name}</h2>
+              <p>{cat.description}</p>
             </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://supabase.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Supabase</h3>
-              <p>Backend-as-a-Service open source con PostgreSQL, Auth, Storage y Edge Functions.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://linear.app" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Linear</h3>
-              <p>Issue tracker rápido y minimalista para equipos de ingeniería.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-        </div>
-      </div>
-
-      <div class="resource-category">
-        <h2>Productividad</h2>
-        <div class="resource-list">
-          <a href="https://raycast.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Raycast</h3>
-              <p>Launcher para macOS con AI integrado, snippets y extensiones.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://notion.so" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><BookOpen class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Notion</h3>
-              <p>All-in-one workspace para notas, bases de datos y project management.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://linear.app" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Todoist</h3>
-              <p>Gestor de tareas con NLP, vistas múltiples y sincronización cross-platform.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-        </div>
-      </div>
-
-      <div class="resource-category">
-        <h2>Automatización</h2>
-        <div class="resource-list">
-          <a href="https://zapier.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Zapier</h3>
-              <p>Automatización no-code con 6,000+ integraciones para conectar tus apps.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://make.com" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>Make</h3>
-              <p>Plataforma visual de automatización con flujos complejos y lógica condicional.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-          <a href="https://n8n.io" target="_blank" rel="noopener" class="resource-card">
-            <div class="resource-icon-box"><Zap class="resource-icon" /></div>
-            <div class="resource-info">
-              <h3>n8n</h3>
-              <p>Automatización open source que puedes self-hostear. Código cuando lo necesites.</p>
-            </div>
-            <ExternalLink class="resource-arrow" />
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </section>
+          </div>
+          <div class="tools-grid">
+            {cat.tools.map((tool, ti) => {
+              const ToolIcon = tool.icon;
+              return (
+                <a href={tool.url} target="_blank" rel="noopener" class="tool-card" style={`--delay:${ti * 0.05}s; --cat-color:${cat.color}`}>
+                  <div class="tool-card-top">
+                    <div class="tool-icon-box" style={`--cat-color:${cat.color}`}>
+                      <ToolIcon class="tool-icon" />
+                    </div>
+                    <ExternalLink class="tool-ext" />
+                  </div>
+                  <div class="tool-tag" style={`--cat-color:${cat.color}`}>{tool.tag}</div>
+                  <h3>{tool.name}</h3>
+                  <p>{tool.desc}</p>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      );
+    })}
+  </div>
 
 </BaseLayout>
 
+<script is:inline>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); } });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => io.observe(el));
+</script>
+
 <style>
+  /* ── HERO ── */
   .recursos-hero {
-    position: relative;
-    z-index: 1;
-    padding: 160px 0 60px;
-    text-align: center;
+    position: relative; z-index: 1;
+    padding: 160px 0 50px; text-align: center; overflow: hidden;
   }
-  .section-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-8);
-    font-family: var(--font-inter);
-    font-size: var(--text-caption);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-electric-iris);
-    margin-bottom: var(--spacing-12);
-    font-weight: var(--font-weight-semibold);
+  .hero-bg-glow {
+    position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 450px;
+    background: radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, rgba(86,131,218,0.06) 50%, transparent 70%);
+    filter: blur(60px); pointer-events: none;
   }
-  .eyebrow-icon { width: 14px; height: 14px; }
-  .recursos-hero h1 {
-    font-family: var(--font-inter);
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: var(--font-weight-bold);
-    margin-bottom: var(--spacing-12);
-    letter-spacing: -0.03em;
-  }
-  .recursos-hero p {
-    font-family: var(--font-inter);
-    font-size: var(--text-body-lg);
-    color: var(--text-secondary);
-    max-width: 560px;
-    margin: 0 auto;
-  }
-
-  .recursos-grid-section {
-    position: relative;
-    z-index: 1;
-    padding: 0 0 var(--spacing-160);
-  }
-
-  .resource-category {
-    margin-bottom: var(--spacing-48);
-  }
-  .resource-category h2 {
-    font-family: var(--font-inter);
-    font-size: var(--text-heading-sm);
-    font-weight: var(--font-weight-semibold);
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: var(--radius-full);
+    background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+    color: #34d399; font-family: var(--font-inter); font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
     margin-bottom: var(--spacing-16);
-    color: var(--text-primary);
+  }
+  .hero-badge-icon { width: 12px; height: 12px; }
+  .recursos-hero h1 {
+    font-family: var(--font-inter); font-weight: 800;
+    font-size: clamp(28px, 5vw, 52px); line-height: 1.1;
+    letter-spacing: -0.04em; margin-bottom: var(--spacing-12);
+  }
+  .hero-gradient {
+    background: linear-gradient(135deg, #10b981 0%, #5683da 50%, #f59e0b 100%);
+    background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: heroGrad 6s ease infinite;
+  }
+  @keyframes heroGrad { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+  .hero-sub {
+    font-family: var(--font-inter); font-size: var(--text-body-lg);
+    color: var(--text-secondary); max-width: 520px; margin: 0 auto var(--spacing-20);
+  }
+  .hero-stats { display: flex; justify-content: center; gap: var(--spacing-8); flex-wrap: wrap; }
+  .stat-pill {
+    display: flex; align-items: center; gap: 4px;
+    padding: 5px 14px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    font-family: var(--font-inter); font-size: 12px; color: var(--text-secondary);
+  }
+  .stat-num { font-weight: 700; color: var(--text-primary); }
+
+  .anim-fade-up {
+    opacity: 0; transform: translateY(20px);
+    animation: fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) forwards;
+    animation-delay: var(--delay, 0s);
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* ── PAGE ── */
+  .recursos-page { padding-bottom: var(--spacing-160); }
+
+  /* ── CATEGORY ── */
+  .category-section { margin-bottom: var(--spacing-56); }
+  .category-header {
+    display: flex; align-items: center; gap: var(--spacing-16);
+    margin-bottom: var(--spacing-24);
+  }
+  .category-icon-box {
+    width: 48px; height: 48px; min-width: 48px;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--cat-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cat-color) 20%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cat-color);
+  }
+  .category-icon { width: 24px; height: 24px; }
+  .category-header h2 {
+    font-family: var(--font-inter); font-size: 22px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: 2px; letter-spacing: -0.02em;
+  }
+  .category-header p {
+    font-family: var(--font-inter); font-size: 14px; color: var(--text-secondary); margin: 0;
   }
 
-  .resource-list {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-8);
+  /* ── TOOLS GRID ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-12);
   }
-
-  .resource-card {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-16);
-    padding: var(--spacing-16) var(--spacing-20);
-    background: rgba(255, 255, 255, 0.02);
+  .tool-card {
+    padding: var(--spacing-20);
+    background: rgba(255,255,255,0.02);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-cards);
     text-decoration: none;
+    display: flex; flex-direction: column;
     transition: all 250ms var(--ease-out-strong);
   }
-  .resource-card:hover {
-    border-color: var(--color-electric-iris);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(86, 131, 218, 0.1);
+  .tool-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cat-color);
+    box-shadow: 0 12px 32px color-mix(in srgb, var(--cat-color) 10%, transparent);
   }
-
-  .resource-icon-box {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+  .tool-card-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: var(--spacing-12);
+  }
+  .tool-icon-box {
+    width: 40px; height: 40px;
     border-radius: var(--radius-md);
-    background: rgba(86, 131, 218, 0.08);
-    border: 1px solid rgba(86, 131, 218, 0.15);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-electric-iris);
+    background: color-mix(in srgb, var(--cat-color) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cat-color) 15%, transparent);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cat-color);
   }
-  .resource-icon { width: 18px; height: 18px; }
-
-  .resource-info { flex: 1; }
-  .resource-info h3 {
-    font-family: var(--font-inter);
-    font-size: var(--text-body-lg);
-    font-weight: var(--font-weight-semibold);
-    color: var(--text-primary);
-    margin-bottom: 2px;
-  }
-  .resource-info p {
-    font-family: var(--font-inter);
-    font-size: var(--text-body);
-    color: var(--text-secondary);
-    margin: 0;
-  }
-
-  .resource-arrow {
-    width: 16px;
-    height: 16px;
+  .tool-icon { width: 20px; height: 20px; }
+  .tool-ext {
+    width: 14px; height: 14px;
     color: var(--color-iron-veil);
-    transition: color 200ms var(--ease-out-strong), transform 200ms var(--ease-out-strong);
+    transition: color 200ms ease, transform 200ms ease;
   }
-  .resource-card:hover .resource-arrow {
-    color: var(--color-electric-iris);
-    transform: translate(2px, -2px);
+  .tool-card:hover .tool-ext { color: var(--cat-color); transform: translate(2px, -2px); }
+  .tool-tag {
+    display: inline-block; align-self: flex-start;
+    padding: 2px 8px; border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--cat-color) 8%, transparent);
+    font-family: var(--font-inter); font-size: 10px; font-weight: 600;
+    color: var(--cat-color); text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: var(--spacing-8);
+  }
+  .tool-card h3 {
+    font-family: var(--font-inter); font-size: 16px; font-weight: 600;
+    color: var(--text-primary); margin-bottom: 4px;
+  }
+  .tool-card p {
+    font-family: var(--font-inter); font-size: 13px; color: var(--text-secondary);
+    line-height: 1.5; margin: 0;
   }
 
+  /* ── REVEAL ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.5s cubic-bezier(0.23,1,0.32,1), transform 0.5s cubic-bezier(0.23,1,0.32,1);
+    transition-delay: var(--delay, 0s);
+  }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
   @media (max-width: 868px) {
-    .recursos-hero { padding: 140px 0 40px; }
+    .recursos-hero { padding: 140px 0 30px; }
+    .category-header { flex-direction: column; align-items: flex-start; gap: var(--spacing-12); }
+    .tools-grid { grid-template-columns: 1fr; }
   }
 </style>
