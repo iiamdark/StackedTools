@@ -179,14 +179,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
-  <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script is:inline>
   (function() {
     const MODIFIED_KEY = 'st_admin_modified';
     const SUPABASE_URL = 'https://muhhvygrzcfuyyfkfwtb.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11aGh2eWdyemNmdXl5Zmtmd3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzMxNjMsImV4cCI6MjEwMDcwOTE2M30.XuGE-4YAmetPRQz_6imyXVL7IFAwuZK9UnrL50oPACM';
-
-    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const loginScreen = document.getElementById('login-screen');
     const adminApp = document.getElementById('admin-app');
@@ -197,6 +194,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const loginLoading = document.getElementById('login-loading');
     const logoutBtn = document.getElementById('logout-btn');
 
+    let supabaseClient = null;
+
+    function getSupabase() {
+      if (supabaseClient) return supabaseClient;
+      if (window.supabase && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        return supabaseClient;
+      }
+      return null;
+    }
+
     function showDashboard() {
       loginScreen.style.display = 'none';
       adminApp.style.display = '';
@@ -204,10 +212,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     async function checkAuth() {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session) {
-        showDashboard();
-      }
+      const sb = getSupabase();
+      if (!sb) { loadPosts(); return; }
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) { showDashboard(); }
+      } catch(e) { console.error('Auth check failed:', e); }
     }
 
     if (loginBtn) {
@@ -219,11 +229,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           loginError.style.display = '';
           return;
         }
+        const sb = getSupabase();
+        if (!sb) {
+          loginError.textContent = 'Auth service unavailable. Try again later.';
+          loginError.style.display = '';
+          return;
+        }
         loginError.style.display = 'none';
         loginLoading.style.display = '';
         loginBtn.disabled = true;
 
-        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        const { error } = await sb.auth.signInWithPassword({ email, password });
 
         loginLoading.style.display = 'none';
         loginBtn.disabled = false;
@@ -243,42 +259,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     if (logoutBtn) {
       logoutBtn.addEventListener('click', async () => {
-        await supabaseClient.auth.signOut();
+        const sb = getSupabase();
+        if (sb) await sb.auth.signOut();
         localStorage.removeItem(MODIFIED_KEY);
         location.reload();
       });
     }
 
     checkAuth();
-
-  // State
-  let allPosts = [];
-  let filteredPosts = [];
-  let modifiedPosts = JSON.parse(localStorage.getItem(MODIFIED_KEY) || '{}');
-  let activeCat = 'all';
-  let searchQuery = '';
-  let currentEditId = null;
-
-  const catColors = {
-    'ai-tools': '#8b5cf6',
-    'comparisons': '#5683da',
-    'productivity': '#f59e0b',
-    'automation': '#10b981',
-    'guides': '#f472b6',
-    'business-software': '#ef4444',
-  };
-
-  // Load
-  async function loadPosts() {
-    try {
-      const res = await fetch('/api/posts.json');
-      allPosts = await res.json();
-      applyFilters();
-      updateStats();
-    } catch (err) {
-      console.error('Failed to load posts:', err);
-    }
-  }
 
   function applyFilters() {
     filteredPosts = allPosts.filter(p => {
