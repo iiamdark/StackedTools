@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BookOpen, ExternalLink, Sparkles, Code, Zap, Bot, GraduationCap, FileText, Users, Globe, Terminal, Layers, Mail, Database, GitCompare, Calendar, Shield, BarChart3, Palette, Map, Star, Wrench, Search } from 'lucide-astro';
+
+const categories = [
+  {
+    name: 'IA y Asistentes de Código',
+    description: 'Herramientas impulsadas por IA que escriben, revisan y despliegan código contigo',
+    color: '#8b5cf6',
+    icon: Bot,
+    tools: [
+      { name: 'Cursor', desc: 'Editor de código con IA y Composer para ediciones multifiles y comprensión del código', url: 'https://cursor.com', icon: Terminal, tag: 'Editor IA' },
+      { name: 'GitHub Copilot', desc: 'Programador en pareja con IA en tu editor con chat y revisión de código', url: 'https://github.com/features/copilot', icon: Bot, tag: 'Código IA' },
+      { name: 'OpenAI Codex', desc: 'Centro de comando para controlar agentes de IA. Trabaja con múltiples agentes en paralelo', url: 'https://openai.com/codex', icon: Bot, tag: 'Agentes' },
+      { name: 'OpenClaw', desc: 'Asistente personal de IA que corre en tus dispositivos. Conecta con WhatsApp, Telegram, Slack', url: 'https://github.com/openclaw/openclaw', icon: Bot, tag: 'Asistente' },
+      { name: 'Spec Kit', desc: 'Toolkit de desarrollo impulsado por especificaciones para Claude Code, Gemini CLI, Codex', url: 'https://speckit.org', icon: Code, tag: 'Especificaciones' },
+      { name: 'CodexBar', desc: 'App que muestra el uso de tus suscripciones de IA. Compatible con Claude, Gemini, Cursor', url: 'https://github.com/steipete/CodexBar', icon: BarChart3, tag: 'Uso' },
+      { name: 'System Prompts Collection', desc: 'Colección de prompts del sistema extraídos de ChatGPT, Claude, Gemini y Grok', url: 'https://github.com/asgeirtj/system_prompts_leaks', icon: Search, tag: 'Prompts' },
+      { name: 'Cursor Fundamentals', desc: 'Curso oficial de Cursor en español. 6 módulos cubriendo IA, agentes, MCP y más', url: 'https://cursor.com/es/learn', icon: GraduationCap, tag: 'Curso' },
+      { name: 'Agent Skills with Anthropic', desc: 'Curso gratuito de Anthropic sobre Agent Skills. Aprende a crear skills para Claude Code', url: 'https://www.deeplearning.ai/short-courses/agent-skills-with-anthropic/', icon: GraduationCap, tag: 'Curso' },
+    ],
+  },
+  {
+    name: 'Desarrollo',
+    description: 'Herramientas y plataformas fundamentales para construir software moderno',
+    color: '#5683da',
+    icon: Code,
+    tools: [
+      { name: 'Vercel', desc: 'Despliegues instantáneos para Next.js, Astro, SvelteKit con computación en el borde', url: 'https://vercel.com', icon: Layers, tag: 'Deploy' },
+      { name: 'Supabase', desc: 'Backend de código abierto: PostgreSQL, Auth, Storage, Edge Functions', url: 'https://supabase.com', icon: Database, tag: 'BaaS' },
+      { name: 'Linear', desc: 'Rastreador de issues rápido y minimalista para equipos de ingeniería', url: 'https://linear.app', icon: GitCompare, tag: 'Gestión' },
+      { name: 'Railway', desc: 'Despliegues fullstack con bases de datos gestionadas', url: 'https://railway.app', icon: Zap, tag: 'Hosting' },
+      { name: 'npkill', desc: 'Herramienta CLI para encontrar y eliminar carpetas node_modules no usadas', url: 'https://npkill.js.org', icon: Wrench, tag: 'CLI' },
+      { name: 'Kokonut UI', desc: '+100 componentes animados de código abierto con Tailwind y shadcn/ui', url: 'https://github.com/kokonut-labs/kokonutui', icon: Palette, tag: 'UI Kit' },
+    ],
+  },
+  {
+    name: 'Productividad',
+    description: 'Organiza tu trabajo y maximiza tu tiempo',
+    color: '#f59e0b',
+    icon: Zap,
+    tools: [
+      { name: 'Raycast', desc: 'Lanzador de macOS con IA, snippets y extensiones', url: 'https://raycast.com', icon: Zap, tag: 'Lanzador' },
+      { name: 'Notion', desc: 'Espacio de trabajo todo-en-uno: notas, bases de datos, gestión de proyectos', url: 'https://notion.so', icon: BookOpen, tag: 'Espacio' },
+      { name: 'Todoist', desc: 'Gestor de tareas con NLP y múltiples vistas', url: 'https://todoist.com', icon: BarChart3, tag: 'Tareas' },
+      { name: 'Arc Browser', desc: 'Navegador con barra lateral, Spaces e IA integrada', url: 'https://arc.net', icon: Globe, tag: 'Navegador' },
+      { name: '1Password', desc: 'Gestor de contraseñas con passkeys y uso compartido de equipos', url: 'https://1password.com', icon: Shield, tag: 'Seguridad' },
+      { name: 'Cal.com', desc: 'Programación de código abierto, autoalojada', url: 'https://cal.com', icon: Calendar, tag: 'Programación' },
+    ],
+  },
+  {
+    name: 'Automatización',
+    description: 'Conecta tus apps y elimina el trabajo manual',
+    color: '#10b981',
+    icon: Zap,
+    tools: [
+      { name: 'Zapier', desc: '+6.000 integraciones sin código para conectar todo', url: 'https://zapier.com', icon: Zap, tag: 'Sin Código' },
+      { name: 'Make', desc: 'Plataforma de automatización visual con flujos complejos', url: 'https://make.com', icon: Layers, tag: 'Visual' },
+      { name: 'n8n', desc: 'Automatización de código abierto, autoalojada', url: 'https://n8n.io', icon: Terminal, tag: 'Código Abierto' },
+      { name: 'Resend', desc: 'Email transaccional con API moderna y React Email', url: 'https://resend.com', icon: Mail, tag: 'Email' },
+      { name: 'Upstash', desc: 'Redis serverless y QStash para colas', url: 'https://upstash.com', icon: Database, tag: 'Serverless' },
+      { name: 'Pipedream', desc: 'Conecta APIs con código cuando lo necesitas', url: 'https://pipedream.com', icon: Code, tag: 'API' },
+    ],
+  },
+  {
+    name: 'Aprendizaje',
+    description: 'Cursos, desafíos y recursos para elevar tus habilidades',
+    color: '#f472b6',
+    icon: GraduationCap,
+    tools: [
+      { name: 'freeCodeCamp', desc: 'Aprende a programar gratis con certificaciones profesionales. +3000 horas de contenido', url: 'https://www.freecodecamp.org', icon: GraduationCap, tag: 'Gratis' },
+      { name: 'AdventJS', desc: 'Calendario de adviento de JavaScript, TypeScript y Python con desafíos diarios', url: 'https://adventjs.dev', icon: Code, tag: 'Desafíos' },
+      { name: 'Python MOOC - Helsinki', desc: 'Curso completo de Python de cero a avanzado con certificado oficial de universidad', url: 'https://programming-24.mooc.fi', icon: GraduationCap, tag: 'Certificado' },
+      { name: 'KodeKloud Free Labs', desc: 'Practica Kubernetes, Docker, Terraform en entornos gratuitos en tu navegador', url: 'https://kodekloud.com/free-labs/kubernetes', icon: Terminal, tag: 'DevOps' },
+      { name: 'JSCamp Bootcamp', desc: 'Ejercicios del bootcamp de JavaScript de midudev con proyectos reales', url: 'https://github.com/midudev/jscamp', icon: Code, tag: 'Bootcamp' },
+      { name: 'NVIDIA Deep Learning', desc: 'Cursos gratuitos de IA por NVIDIA. GenAI, redes neuronales, agentes LLM con certificación', url: 'https://www.nvidia.com/en-us/training/', icon: Bot, tag: 'Gratis' },
+      { name: '500+ Proyectos IA', desc: 'Repo masivo con 500 proyectos de IA, ML, Deep Learning, Visión por Computadora y NLP', url: 'https://github.com/ashishpatel26/500-AI-Machine-learning-Deep-learning-Computer-vision-NLP-Projects-with-code', icon: Bot, tag: 'Proyectos' },
+      { name: 'LLM Engineer Toolkit', desc: '+120 librerías curadas para IA/LLM organizadas por fase de desarrollo', url: 'https://github.com/KalyanKS-NLP/llm-engineer-toolkit', icon: Bot, tag: 'Librerías' },
+    ],
+  },
+  {
+    name: 'Documentación',
+    description: 'Documentación oficial y referencias que realmente usarás',
+    color: '#06b6d4',
+    icon: FileText,
+    tools: [
+      { name: 'MDN Web Docs', desc: 'Documentación web definitiva por Mozilla. HTML, CSS, JavaScript y APIs del navegador', url: 'https://developer.mozilla.org', icon: FileText, tag: 'Referencia' },
+      { name: 'React Documentation', desc: 'Docs oficiales de React con hooks, Server Components y mejores prácticas modernas', url: 'https://react.dev', icon: Code, tag: 'Frontend' },
+      { name: 'web.dev', desc: 'Guías de Google, codelabs y mejores prácticas para desarrollo web moderno', url: 'https://web.dev', icon: Globe, tag: 'Google' },
+    ],
+  },
+  {
+    name: 'Roadmaps y Carrera',
+    description: 'Guías visuales para planificar tu carrera de desarrollador',
+    color: '#ef4444',
+    icon: Map,
+    tools: [
+      { name: 'Developer Roadmaps', desc: 'Guías visuales paso a paso para Frontend, Backend, DevOps y más', url: 'https://roadmap.sh', icon: Map, tag: 'Roadmaps' },
+    ],
+  },
+  {
+    name: 'Herramientas y Plantillas Gratis',
+    description: 'Hosting, APIs, plantillas y recursos de desarrollador gratuitos',
+    color: '#22c55e',
+    icon: Star,
+    tools: [
+      { name: 'Free for Developers', desc: 'Lista masiva de herramientas gratuitas: hosting, APIs, bases de datos, CI/CD y más', url: 'https://free-for.dev', icon: Star, tag: 'Gratis' },
+      { name: 'GitHub Student Dev Pack', desc: '+$200k en créditos y herramientas gratis para estudiantes. Hosting, dominios, cursos', url: 'https://education.github.com/pack', icon: GraduationCap, tag: 'Estudiantes' },
+      { name: 'Public APIs', desc: 'Lista colectiva de APIs públicas gratis: clima, noticias, finanzas, entretenimiento', url: 'https://github.com/public-apis/public-apis', icon: Globe, tag: 'APIs' },
+      { name: 'HTML Templates', desc: '+1000 plantillas HTML gratis. Responsivas, modernas, Bootstrap y Tailwind', url: 'https://htmltemplates.co', icon: Palette, tag: 'Plantillas' },
+      { name: 'UIdeck', desc: '+2000 plantillas HTML y kits de UI gratis para React, Vue, Astro, Next.js', url: 'https://uideck.com', icon: Palette, tag: 'UI Kit' },
+      { name: 'Awesome Lists', desc: 'Meta-lista de listas curadas sobre cada tema: lenguajes, frameworks, herramientas', url: 'https://github.com/sindresorhus/awesome', icon: Star, tag: 'Curado' },
+    ],
+  },
+  {
+    name: 'Comunidad',
+    description: 'Donde los desarrolladores se ayudan mutuamente a crecer',
+    color: '#a855f7',
+    icon: Users,
+    tools: [
+      { name: 'Stack Overflow', desc: 'La comunidad de Q&A de desarrolladores más grande. Millones de preguntas y respuestas', url: 'https://stackoverflow.com', icon: Users, tag: 'Q&A' },
+      { name: 'DEV Community', desc: 'Comunidad de desarrolladores con artículos, tutoriales y discusiones', url: 'https://dev.to', icon: BookOpen, tag: 'Blog' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Recursos — StackedTools"
+  description="Herramientas, guías y recursos útiles para desarrolladores, creadores y equipos de productividad."
+>
+
+  <section class="recursos-hero">
+    <div class="hero-bg-glow" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-badge anim-fade-up" style="--delay:.1s">
+        <Sparkles class="hero-badge-icon" />
+        <span>Recursos Curados</span>
+      </div>
+      <h1 class="anim-fade-up" style="--delay:.2s">
+        Herramientas que Nuestro Equipo<br/>
+        <span class="hero-gradient">Usa Cada Día</span>
+      </h1>
+      <p class="hero-sub anim-fade-up" style="--delay:.35s">
+        Recomendaciones reales, sin patrocinios. Cada herramienta ha sido probada por nuestro equipo en proyectos reales.
+      </p>
+      <div class="hero-stats anim-fade-up" style="--delay:.5s">
+        <div class="stat-pill"><span class="stat-num">{categories.reduce((a, c) => a + c.tools.length, 0)}</span> Recursos</div>
+        <div class="stat-pill"><span class="stat-num">{categories.length}</span> Categorías</div>
+        <div class="stat-pill"><span class="stat-num">100%</span> Probado</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container recursos-page">
+    {categories.map((cat, ci) => {
+      const CatIcon = cat.icon;
+      return (
+        <section class="category-section reveal" style={`--delay:${Math.min(ci * 0.08, 0.3)}s`}>
+          <div class="category-header">
+            <div class="category-icon-box" style={`--cat-color:${cat.color}`}>
+              <CatIcon class="category-icon" />
+            </div>
+            <div>
+              <h2>{cat.name}</h2>
+              <p>{cat.description}</p>
+            </div>
+          </div>
+          <div class="tools-grid">
+            {cat.tools.map((tool, ti) => {
+              const ToolIcon = tool.icon;
+              return (
+                <a href={tool.url} target="_blank" rel="noopener" class="tool-card" style={`--delay:${ti * 0.04}s; --cat-color:${cat.color}`}>
+                  <div class="tool-card-top">
+                    <div class="tool-icon-box" style={`--cat-color:${cat.color}`}>
+                      <ToolIcon class="tool-icon" />
+                    </div>
+                    <ExternalLink class="tool-ext" />
+                  </div>
+                  <div class="tool-tag" style={`--cat-color:${cat.color}`}>{tool.tag}</div>
+                  <h3>{tool.name}</h3>
+                  <p>{tool.desc}</p>
+                </a>
+              );
+            })}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+
+</BaseLayout>
+
+<script is:inline>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); } });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
+  reveals.forEach(el => io.observe(el));
+</script>
+
+<style>
+  .recursos-hero { position: relative; z-index: 1; padding: 160px 0 50px; text-align: center; overflow: hidden; }
+  .hero-bg-glow { position: absolute; top: -30%; left: 50%; transform: translateX(-50%); width: 800px; height: 450px; background: radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, rgba(86,131,218,0.06) 50%, transparent 70%); filter: blur(60px); pointer-events: none; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; border-radius: var(--radius-full); background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: #34d399; font-family: var(--font-inter); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--spacing-16); }
+  .hero-badge-icon { width: 12px; height: 12px; }
+  .recursos-hero h1 { font-family: var(--font-inter); font-weight: 800; font-size: clamp(28px, 5vw, 52px); line-height: 1.1; letter-spacing: -0.04em; margin-bottom: var(--spacing-12); }
+  .hero-gradient { background: linear-gradient(135deg, #10b981 0%, #5683da 50%, #f59e0b 100%); background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: heroGrad 6s ease infinite; }
+  @keyframes heroGrad { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+  .hero-sub { font-family: var(--font-inter); font-size: var(--text-body-lg); color: var(--text-secondary); max-width: 520px; margin: 0 auto var(--spacing-20); }
+  .hero-stats { display: flex; justify-content: center; gap: var(--spacing-8); flex-wrap: wrap; }
+  .stat-pill { display: flex; align-items: center; gap: 4px; padding: 5px 14px; border-radius: var(--radius-full); background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); font-family: var(--font-inter); font-size: 12px; color: var(--text-secondary); }
+  .stat-num { font-weight: 700; color: var(--text-primary); }
+
+  .anim-fade-up { opacity: 0; transform: translateY(20px); animation: fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) forwards; animation-delay: var(--delay, 0s); }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .recursos-page { padding-bottom: var(--spacing-160); }
+
+  .category-section { margin-bottom: var(--spacing-56); }
+  .category-header { display: flex; align-items: center; gap: var(--spacing-16); margin-bottom: var(--spacing-24); }
+  .category-icon-box { width: 48px; height: 48px; min-width: 48px; border-radius: var(--radius-md); background: color-mix(in srgb, var(--cat-color) 10%, transparent); border: 1px solid color-mix(in srgb, var(--cat-color) 20%, transparent); display: flex; align-items: center; justify-content: center; color: var(--cat-color); }
+  .category-icon { width: 24px; height: 24px; }
+  .category-header h2 { font-family: var(--font-inter); font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; letter-spacing: -0.02em; }
+  .category-header p { font-family: var(--font-inter); font-size: 14px; color: var(--text-secondary); margin: 0; }
+
+  .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--spacing-12); }
+  .tool-card { padding: var(--spacing-20); background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-cards); text-decoration: none; display: flex; flex-direction: column; transition: all 250ms var(--ease-out-strong); }
+  .tool-card:hover { transform: translateY(-4px); border-color: var(--cat-color); box-shadow: 0 12px 32px color-mix(in srgb, var(--cat-color) 10%, transparent); }
+  .tool-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--spacing-12); }
+  .tool-icon-box { width: 40px; height: 40px; border-radius: var(--radius-md); background: color-mix(in srgb, var(--cat-color) 8%, transparent); border: 1px solid color-mix(in srgb, var(--cat-color) 15%, transparent); display: flex; align-items: center; justify-content: center; color: var(--cat-color); }
+  .tool-icon { width: 20px; height: 20px; }
+  .tool-ext { width: 14px; height: 14px; color: var(--color-iron-veil); transition: color 200ms ease, transform 200ms ease; }
+  .tool-card:hover .tool-ext { color: var(--cat-color); transform: translate(2px, -2px); }
+  .tool-tag { display: inline-block; align-self: flex-start; padding: 2px 8px; border-radius: var(--radius-full); background: color-mix(in srgb, var(--cat-color) 8%, transparent); font-family: var(--font-inter); font-size: 10px; font-weight: 600; color: var(--cat-color); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-8); }
+  .tool-card h3 { font-family: var(--font-inter); font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .tool-card p { font-family: var(--font-inter); font-size: 13px; color: var(--text-secondary); line-height: 1.5; margin: 0; }
+
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.5s cubic-bezier(0.23,1,0.32,1), transform 0.5s cubic-bezier(0.23,1,0.32,1); transition-delay: var(--delay, 0s); }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 868px) {
+    .recursos-hero { padding: 140px 0 30px; }
+    .category-header { flex-direction: column; align-items: flex-start; gap: var(--spacing-12); }
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+</style>

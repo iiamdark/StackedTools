@@ -1,0 +1,54 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Sobre StackedTools"
+  description="Descubre nuestra misión, estándares editoriales y el equipo detrás de StackedTools."
+>
+  <h2>Nuestra Misión</h2>
+  <p>
+    StackedTools fue creado con un objetivo simple: ayudar a profesionales modernos, creadores y equipos a encontrar, comparar y dominar el mejor software digital sin el relleno de marketing.
+  </p>
+  <p>
+    En un mar de reseñas genéricas y contenido patrocinado, priorizamos pruebas objetivas, datos reales, tablas de comparación claras y veredictos prácticos para que puedas tomar decisiones informadas rápidamente.
+  </p>
+
+  <h2>Estándares Editoriales y E-E-A-T</h2>
+  <p>
+    Cada pieza de contenido en StackedTools sigue directrices editoriales rigurosas:
+  </p>
+  <ul>
+    <li><strong>Pruebas Prácticas:</strong> Evaluamos herramientas basándonos en flujos de trabajo reales de usuario, capacidades de funciones, niveles de precios y limitaciones prácticas.</li>
+    <li><strong>Veredictos Imparciales:</strong> Nuestras recomendaciones nunca se venden al mejor postor. Si una herramienta tiene desventajas, las destacamos claramente.</li>
+    <li><strong>Información Actualizada:</strong> El software digital evoluciona rápidamente. Revisamos y actualizamos nuestras guías de comparación regularmente para asegurar que precios y funciones sigan siendo precisos.</li>
+  </ul>
+
+  <h2>Equipo Editorial</h2>
+  <p>
+    Nuestro contenido está producido por entusiastas de la tecnología y revisores de software comprometidos con la claridad y precisión.
+  </p>
+  <div class="team-card">
+    <h3>Alex Rivera</h3>
+    <p class="role">Director de Investigación de IA y Software</p>
+    <p>Alex se especializa en flujos de trabajo B2B SaaS, plataformas de IA generativa y tecnología de productividad. Con más de 6 años de experiencia probando productos digitales, Alex supervisa nuestra metodología de pruebas comparativas.</p>
+  </div>
+</PageLayout>
+
+<style>
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-cards);
+    padding: var(--spacing-24);
+    margin-top: var(--spacing-24);
+  }
+  .role {
+    color: var(--color-electric-iris);
+    font-family: var(--font-inter);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--text-body);
+    margin-bottom: var(--spacing-12);
+    letter-spacing: var(--tracking-body);
+  }
+</style>

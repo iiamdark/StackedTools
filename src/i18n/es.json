@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "resources": "Recursos",
+    "about": "Sobre nosotros",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "badge": "Portal StackedTools 2026",
+    "titleLine1a": "Descubre,",
+    "titleLine1b": "Compara",
+    "titleLine1c": "&",
+    "titleLine2a": "Domina",
+    "titleLine2b": "las",
+    "titleLine2c": "Mejores",
+    "titleLine3a": "Herramientas",
+    "titleLine3b": "Digitales",
+    "subtitle": "Análisis profundos, comparaciones directas de software y guías de automatización sin código para creadores modernos, desarrolladores y equipos de crecimiento.",
+    "cta1": "Explorar Categorías",
+    "cta2": "Estándares Editoriales"
+  },
+  "stats": {
+    "toolsReviewed": "Herramientas Revisadas",
+    "monthlyReaders": "Lectores Mensuales",
+    "categories": "Categorías",
+    "honestReviews": "Reseñas Honestas"
+  },
+  "features": {
+    "eyebrow": "Por qué StackedTools",
+    "title": "Hecho para Personas que<br/>Realmente Usan Software",
+    "subtitle": "Probamos cada herramienta con flujos de trabajo reales, proyectos reales y dinero real.",
+    "zeroAISlop": "Cero IA Genérica",
+    "zeroAISlopDesc": "Cada reseña está escrita por humanos, probada en la práctica y verificada por precisión.",
+    "realPricing": "Datos de Precio Reales",
+    "realPricingDesc": "Rastreamos precios en vivo, descuentos y cambios de planes para que nunca pagues de más.",
+    "headToHead": "Comparaciones Directas",
+    "headToHeadDesc": "Desgloses lado a lado que hacen elegir software sin esfuerzo.",
+    "noCode": "Automatización Sin Código",
+    "noCodeDesc": "Guías paso a paso para automatizar tu flujo de trabajo sin escribir una sola línea."
+  },
+  "categories": {
+    "eyebrow": "Categorías Principales",
+    "title": "Explora por Categoría",
+    "subtitle": "Explora nuestros silos curados de reseñas de software y análisis técnicos.",
+    "aiTools": "Herramientas IA",
+    "aiToolsDesc": "Reseñas y comparaciones de software de IA de vanguardia",
+    "productivity": "Productividad",
+    "productivityDesc": "Gestión de tareas, toma de notas y sistemas de trabajo",
+    "comparisons": "Comparaciones",
+    "comparisonsDesc": "Enfrentamientos directos de software y alternativas",
+    "automation": "Automatización",
+    "automationDesc": "Herramientas sin código, integraciones API y flujos automatizados",
+    "businessSoftware": "Software Empresarial",
+    "businessSoftwareDesc": "CRMs, email marketing y operaciones empresariales",
+    "guides": "Guías y Tutoriales",
+    "guidesDesc": "Paseos prácticos y masterclasses paso a paso",
+    "viewTools": "Ver herramientas"
+  },
+  "blog": {
+    "eyebrow": "Contenido Fresco",
+    "title": "Últimos Artículos y Reseñas",
+    "subtitle": "Perspectivas frescas verificadas por nuestro equipo editorial de software.",
+    "readPost": "Leer artículo",
+    "by": "Por",
+    "articles": "Artículos",
+    "blogReviews": "Blog y Reseñas",
+    "heroTitle": "Reseñas de Software que<br/><span class=\"hero-gradient\">Realmente Te Ayudan a Decidir</span>",
+    "heroSub": "Comparaciones y guías honestas, basadas en datos. Sin IA genérica, sin rankings patrocinados.",
+    "noArticles": "No se encontraron artículos",
+    "tryDifferent": "Intenta seleccionar una categoría diferente.",
+    "minRead": "min de lectura"
+  },
+  "recursos": {
+    "title": "Recursos",
+    "heroTitle": "Herramientas que Nuestro Equipo<br/><span class=\"hero-gradient\">Usa Cada Día</span>",
+    "heroSub": "Recomendaciones reales, sin patrocinios. Cada herramienta ha sido probada por nuestro equipo en proyectos reales.",
+    "resources": "Recursos",
+    "categories": "Categorías",
+    "tested": "Probado"
+  },
+  "footer": {
+    "description": "Análisis profundos de software, comparaciones honestas y guías prácticas. Sin IA genérica, sin rankings patrocinados.",
+    "explore": "Explorar",
+    "legal": "Legal",
+    "connect": "Conectar",
+    "contact": "Contacto",
+    "rss": "Feed RSS",
+    "copyright": "StackedTools",
+    "madeWith": "Construido con atención obsesiva al detalle."
+  }
+}

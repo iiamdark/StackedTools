@@ -1,15 +1,19 @@
 ---
 import { BookOpen, Library, Menu, X, Sun, Moon } from 'lucide-astro';
+import LanguageToggle from './LanguageToggle.astro';
+
+const currentLocale = Astro.url.pathname.startsWith('/es') ? 'es' : 'en';
+const prefix = currentLocale === 'es' ? '/es' : '';
 
 const navItems = [
-  { name: 'Blog', href: '/blog', icon: BookOpen },
-  { name: 'Resources', href: '/recursos', icon: Library },
+  { name: 'Blog', href: `${prefix}/blog`, icon: BookOpen },
+  { name: 'Resources', href: `${prefix}/recursos`, icon: Library },
 ];
 ---
 
 <header class="site-header">
   <div class="container header-container">
-    <a href="/" class="logo">
+    <a href={`${prefix}/`} class="logo">
       <div class="logo-wrapper">
         <img src="/logo.png" alt="StackedTools Logo" class="logo-img" />
       </div>
@@ -29,6 +33,7 @@ const navItems = [
     </nav>
 
     <div class="header-actions">
+      <LanguageToggle currentLocale={currentLocale} />
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
         <Sun class="theme-icon sun-icon" />
         <Moon class="theme-icon moon-icon" />
@@ -57,6 +62,9 @@ const navItems = [
           </a>
         );
       })}
+      <div class="mobile-lang-row">
+        <LanguageToggle currentLocale={currentLocale} />
+      </div>
     </nav>
   </div>
 </header>
@@ -335,6 +343,12 @@ const navItems = [
 
   .mobile-nav-link:hover .mobile-nav-icon {
     color: var(--color-electric-iris);
+  }
+
+  .mobile-lang-row {
+    padding: var(--spacing-8) var(--spacing-16);
+    margin-top: var(--spacing-4);
+    border-top: 1px solid var(--border-subtle);
   }
 
   @media (max-width: 1024px) {

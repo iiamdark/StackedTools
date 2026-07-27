@@ -1,0 +1,357 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { 
+  Bot, Zap, GitCompare, Workflow, Briefcase, BookOpen, ArrowUpRight, 
+  Sparkles, ShieldCheck, Flame, TrendingUp, ArrowRight, Layers, Star,
+  CheckCircle2, BarChart3, Users, Globe
+} from 'lucide-astro';
+import NewsletterCTA from '../../components/NewsletterCTA.astro';
+
+const posts = await getCollection('blog');
+
+const categories = [
+  { name: 'Herramientas IA', slug: 'ai-tools', desc: 'Reseñas y comparaciones de software de IA de vanguardia', icon: Bot, badge: 'Popular' },
+  { name: 'Productividad', slug: 'productivity', desc: 'Gestión de tareas, toma de notas y sistemas de trabajo', icon: Zap, badge: 'Alto CPC' },
+  { name: 'Comparaciones', slug: 'comparisons', desc: 'Enfrentamientos directos de software y alternativas', icon: GitCompare, badge: 'Intención de compra' },
+  { name: 'Automatización', slug: 'automation', desc: 'Herramientas sin código, integraciones API y flujos automatizados', icon: Workflow, badge: 'Tendencia' },
+  { name: 'Software Empresarial', slug: 'business-software', desc: 'CRMs, email marketing y operaciones empresariales', icon: Briefcase, badge: 'B2B' },
+  { name: 'Guías y Tutoriales', slug: 'guides', desc: 'Paseos prácticos y masterclasses paso a paso', icon: BookOpen, badge: 'Cómo hacer' },
+];
+
+const stats = [
+  { icon: BarChart3, value: '50+', label: 'Herramientas Revisadas' },
+  { icon: Users, value: '10K+', label: 'Lectores Mensuales' },
+  { icon: Globe, value: '6', label: 'Categorías de Contenido' },
+  { icon: Star, value: '100%', label: 'Reseñas Honestas' },
+];
+
+const features = [
+  { icon: ShieldCheck, title: 'Cero IA Genérica', desc: 'Cada reseña está escrita por humanos, probada en la práctica y verificada por precisión.' },
+  { icon: TrendingUp, title: 'Datos de Precio Reales', desc: 'Rastreamos precios en vivo, descuentos y cambios de planes para que nunca pagues de más.' },
+  { icon: CheckCircle2, title: 'Comparaciones Directas', desc: 'Desgloses lado a lado que hacen elegir software sin esfuerzo.' },
+  { icon: Flame, title: 'Automatización Sin Código', desc: 'Guías paso a paso para automatizar tu flujo de trabajo sin escribir una sola línea.' },
+];
+---
+
+<BaseLayout
+  title="StackedTools — Descubre, Compara y Domina las Mejores Herramientas Digitales"
+  description="Análisis profundos, comparaciones honestas de software y guías prácticas de productividad. Sin relleno, con datos reales."
+>
+
+  <!-- ============ FLOATING ORBS (decorative) ============ -->
+  <div class="orbs" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <div class="hero-badge anim-fade-up" style="--delay:.1s">
+        <Sparkles class="hero-badge-icon" />
+        <span>Portal StackedTools 2026</span>
+      </div>
+
+      <h1 class="hero-title" aria-label="Descubre, Compara y Domina las Mejores Herramientas Digitales">
+        <span class="hero-line hero-line-1">
+          <span class="hero-word" style="--i:0">Descubre,</span>
+          <span class="hero-word" style="--i:1">Compara</span>
+          <span class="hero-word hero-amp" style="--i:2">&amp;</span>
+        </span>
+        <span class="hero-line hero-line-2">
+          <span class="hero-word hero-gradient" style="--i:3">Domina</span>
+          <span class="hero-word hero-gradient" style="--i:4">las</span>
+          <span class="hero-word hero-gradient" style="--i:5">Mejores</span>
+        </span>
+        <span class="hero-line hero-line-3">
+          <span class="hero-word" style="--i:6">Herramientas</span>
+          <span class="hero-word hero-word-ember" style="--i:7">Digitales</span>
+        </span>
+      </h1>
+
+      <p class="hero-subtitle anim-fade-up" style="--delay:1.6s">
+        Análisis profundos, comparaciones directas de software y guías de automatización sin código para creadores modernos, desarrolladores y equipos de crecimiento.
+      </p>
+
+      <div class="hero-actions anim-fade-up" style="--delay:1.8s">
+        <a href="#categories" class="btn-tactile btn-primary-tactile">
+          <span>Explorar Categorías</span>
+          <div class="btn-icon-wrapper"><ArrowRight class="btn-icon" /></div>
+        </a>
+        <a href="/es/about" class="btn-tactile btn-secondary-tactile">
+          <ShieldCheck class="btn-left-icon" />
+          <span>Estándares Editoriales</span>
+        </a>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar anim-fade-up" style="--delay:2.0s">
+        {stats.map(s => {
+          const Icon = s.icon;
+          return (
+            <div class="stat-item">
+              <Icon class="stat-icon" />
+              <span class="stat-value">{s.value}</span>
+              <span class="stat-label">{s.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES BENTO ============ -->
+  <section class="features-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">
+          <Sparkles class="eyebrow-icon" />
+          <span>Por qué StackedTools</span>
+        </div>
+        <h2>Hecho para Personas que<br/>Realmente Usan Software</h2>
+        <p>Probamos cada herramienta con flujos de trabajo reales, proyectos reales y dinero real.</p>
+      </div>
+
+      <div class="features-grid">
+        {features.map((f, i) => {
+          const Icon = f.icon;
+          return (
+            <div class="feature-card reveal" style={`--delay:${i * 0.1}s`}>
+              <div class="feature-icon-box">
+                <Icon class="feature-icon" />
+              </div>
+              <h3>{f.title}</h3>
+              <p>{f.desc}</p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CATEGORIES ============ -->
+  <section id="categories" class="categories-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">
+          <Layers class="eyebrow-icon" />
+          <span>Categorías Principales</span>
+        </div>
+        <h2>Explora por Categoría</h2>
+        <p>Explora nuestros silos curados de reseñas de software y análisis técnicos.</p>
+      </div>
+
+      <div class="category-grid">
+        {categories.map((cat, i) => {
+          const Icon = cat.icon;
+          return (
+            <div class="double-bezel cat-bezel reveal" style={`--delay:${i * 0.08}s`}>
+              <a href={`/es/blog`} class="cat-card double-bezel-inner">
+                <div class="cat-top">
+                  <div class="cat-icon-wrapper">
+                    <Icon class="cat-icon" />
+                  </div>
+                  <span class="badge">{cat.badge}</span>
+                </div>
+                <h3>{cat.name}</h3>
+                <p>{cat.desc}</p>
+                <div class="cat-link">
+                  <span>Ver herramientas</span>
+                  <ArrowUpRight class="cat-arrow" />
+                </div>
+              </a>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LATEST POSTS ============ -->
+  <section class="posts-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-eyebrow">
+          <Flame class="eyebrow-icon" />
+          <span>Contenido Fresco</span>
+        </div>
+        <h2>Últimos Artículos y Reseñas</h2>
+        <p>Perspectivas frescas verificadas por nuestro equipo editorial de software.</p>
+      </div>
+
+      <div class="posts-grid">
+        {posts.map((post, i) => (
+          <div class="double-bezel post-bezel reveal" style={`--delay:${i * 0.08}s`}>
+            <article class="article-card double-bezel-inner">
+              <a href={`/es/blog/${post.id}/`}>
+                <div class="card-meta">
+                  <span class="badge badge-purple">{post.data.category || 'Review'}</span>
+                  <time>{new Date(post.data.pubDate).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}</time>
+                </div>
+                <h3>{post.data.title}</h3>
+                <p>{post.data.description}</p>
+                <div class="card-footer">
+                  <span class="author">Por {post.data.author || 'Equipo StackedTools'}</span>
+                  <span class="read-link">
+                    <span>Leer artículo</span>
+                    <ArrowRight class="read-icon" />
+                  </span>
+                </div>
+              </a>
+            </article>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NEWSLETTER ============ -->
+  <div class="container">
+    <NewsletterCTA />
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => io.observe(el));
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        document.querySelectorAll('.orb').forEach((orb, i) => {
+          const speed = 0.02 + i * 0.015;
+          orb.style.transform = `translateY(${y * speed}px)`;
+        });
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+</script>
+
+<style>
+  .orbs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.12; animation: orbFloat 20s ease-in-out infinite; }
+  .orb-1 { width: 500px; height: 500px; background: var(--color-electric-iris); top: -10%; left: -5%; }
+  .orb-2 { width: 400px; height: 400px; background: var(--color-ember-pulse); top: 30%; right: -8%; animation-delay: -7s; }
+  .orb-3 { width: 350px; height: 350px; background: var(--color-electric-iris); bottom: -5%; left: 30%; animation-delay: -14s; }
+  @keyframes orbFloat { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(30px,-40px) scale(1.05)} 66%{transform:translate(-20px,20px) scale(0.95)} }
+
+  .anim-fade-up { opacity: 0; transform: translateY(24px); animation: fadeUp 0.7s cubic-bezier(0.23,1,0.32,1) forwards; animation-delay: var(--delay,0s); }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.6s cubic-bezier(0.23,1,0.32,1), transform 0.6s cubic-bezier(0.23,1,0.32,1); transition-delay: var(--delay,0s); }
+  .reveal.revealed { opacity: 1; transform: translateY(0); }
+
+  .hero { position: relative; z-index: 1; padding: 160px 0 80px; text-align: center; overflow: hidden; }
+  .hero-glow { position: absolute; top: -20%; left: 50%; transform: translateX(-50%); width: 900px; height: 500px; background: radial-gradient(ellipse, rgba(86,131,218,0.18) 0%, rgba(255,137,100,0.06) 45%, transparent 70%); filter: blur(60px); pointer-events: none; animation: heroGlowPulse 8s ease-in-out infinite; }
+  @keyframes heroGlowPulse { 0%,100%{opacity:0.7;transform:translateX(-50%) scale(1)} 50%{opacity:1;transform:translateX(-50%) scale(1.08)} }
+
+  .hero-inner { display: flex; flex-direction: column; align-items: center; position: relative; }
+  .hero-badge { display: inline-flex; align-items: center; gap: var(--spacing-8); padding: 6px var(--spacing-16); border-radius: var(--radius-full); background: rgba(255,137,100,0.08); border: 1px solid rgba(255,137,100,0.2); color: var(--color-ember-pulse); font-family: var(--font-inter); font-size: var(--text-caption); font-weight: var(--font-weight-bold); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--spacing-24); }
+  .hero-badge-icon { width: 14px; height: 14px; }
+
+  .hero-title { font-family: var(--font-inter); font-weight: var(--font-weight-bold); line-height: 1.0; letter-spacing: -0.06em; margin-bottom: var(--spacing-28); display: flex; flex-direction: column; gap: 0; }
+  .hero-line { display: flex; justify-content: center; align-items: baseline; gap: 0.3em; flex-wrap: wrap; }
+  .hero-line-1 { font-size: clamp(44px, 8.5vw, 100px); }
+  .hero-line-2 { font-size: clamp(52px, 10vw, 120px); }
+  .hero-line-3 { font-size: clamp(44px, 8.5vw, 100px); }
+
+  .hero-word { display: inline-block; opacity: 0; transform: translateY(80px) rotateX(40deg); animation: wordReveal 0.8s cubic-bezier(0.23,1,0.32,1) forwards; animation-delay: calc(0.15s + var(--i) * 0.12s); text-shadow: 0 2px 30px rgba(0,0,0,0.4); }
+  @keyframes wordReveal { 0%{opacity:0;transform:translateY(80px) rotateX(40deg) scale(0.9);filter:blur(8px)} 100%{opacity:1;transform:translateY(0) rotateX(0deg) scale(1);filter:blur(0)} }
+
+  .hero-amp { font-style: italic; opacity: 0.5; color: var(--text-secondary); font-size: 0.7em; align-self: center; }
+  .hero-gradient { background: linear-gradient(135deg, #fff 0%, var(--color-electric-iris) 35%, var(--color-ember-pulse) 70%, #fff 100%); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: wordReveal 0.8s cubic-bezier(0.23,1,0.32,1) forwards, gradientShift 5s ease infinite; animation-delay: calc(0.15s + var(--i) * 0.12s), 0s; position: relative; }
+  .hero-word-ember { color: var(--color-ember-pulse); text-shadow: 0 0 60px rgba(255,137,100,0.3), 0 0 120px rgba(255,137,100,0.1); }
+  @keyframes gradientShift { 0%,100%{background-position:0% 50%} 25%{background-position:100% 0%} 50%{background-position:100% 100%} 75%{background-position:0% 100%} }
+
+  .hero-subtitle { font-family: var(--font-inter); font-size: var(--text-body-lg); color: var(--text-secondary); max-width: 600px; margin: 0 auto var(--spacing-32); line-height: 1.6; }
+  .hero-actions { display: flex; justify-content: center; align-items: center; gap: var(--spacing-16); margin-bottom: var(--spacing-64); }
+  .btn-left-icon { width: 16px; height: 16px; color: var(--color-electric-iris); }
+  .btn-icon { width: 14px; height: 14px; }
+
+  .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-1); width: 100%; max-width: 800px; background: var(--border-color); border-radius: var(--radius-cards); overflow: hidden; }
+  .stat-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--spacing-20) var(--spacing-16); background: var(--bg-card-inner); text-align: center; transition: background 200ms ease; }
+  .stat-item:hover { background: rgba(86,131,218,0.06); }
+  .stat-icon { width: 18px; height: 18px; color: var(--color-electric-iris); margin-bottom: 2px; }
+  .stat-value { font-family: var(--font-inter); font-size: var(--text-heading-sm); font-weight: var(--font-weight-bold); color: var(--text-primary); letter-spacing: -0.02em; }
+  .stat-label { font-family: var(--font-inter); font-size: var(--text-caption); color: var(--color-iron-veil); letter-spacing: var(--tracking-caption); }
+
+  .section-header { margin-bottom: var(--spacing-40); }
+  .section-eyebrow { display: inline-flex; align-items: center; gap: var(--spacing-8); font-family: var(--font-inter); font-size: var(--text-caption); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-electric-iris); margin-bottom: var(--spacing-12); font-weight: var(--font-weight-semibold); }
+  .eyebrow-icon { width: 14px; height: 14px; }
+  .section-header h2 { font-family: var(--font-inter); font-size: clamp(22px, 3.5vw, 36px); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-8); letter-spacing: -0.025em; line-height: 1.2; }
+  .section-header p { color: var(--text-secondary); font-family: var(--font-inter); font-size: var(--text-body-lg); }
+
+  .features-section { position: relative; z-index: 1; padding: var(--spacing-160) 0 var(--spacing-64); }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--spacing-20); }
+  .feature-card { background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: var(--radius-cards); padding: var(--spacing-28); transition: all 300ms var(--ease-out-strong); }
+  .feature-card:hover { border-color: var(--color-electric-iris); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(86,131,218,0.12); }
+  .feature-icon-box { width: 44px; height: 44px; border-radius: var(--radius-md); background: rgba(86,131,218,0.08); border: 1px solid rgba(86,131,218,0.15); display: flex; align-items: center; justify-content: center; color: var(--color-electric-iris); margin-bottom: var(--spacing-16); }
+  .feature-icon { width: 22px; height: 22px; }
+  .feature-card h3 { font-family: var(--font-inter); font-size: var(--text-body-lg); font-weight: var(--font-weight-semibold); margin-bottom: var(--spacing-8); color: var(--text-primary); }
+  .feature-card p { font-family: var(--font-inter); font-size: var(--text-body); color: var(--text-secondary); line-height: 1.55; }
+
+  .categories-section { position: relative; z-index: 1; padding: var(--spacing-64) 0; border-top: 1px solid var(--border-subtle); }
+  .category-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--spacing-20); }
+  .cat-bezel { transition: transform 300ms var(--ease-out-strong), border-color 300ms var(--ease-out-strong), box-shadow 300ms var(--ease-out-strong); }
+  .cat-bezel:hover { transform: translateY(-6px); border-color: var(--color-electric-iris); box-shadow: 0 16px 48px rgba(86,131,218,0.15); }
+  .cat-card { display: flex; flex-direction: column; text-decoration: none; }
+  .cat-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-16); }
+  .cat-icon-wrapper { width: 44px; height: 44px; border-radius: var(--radius-cards); background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: center; color: var(--color-electric-iris); transition: all 250ms var(--ease-out-strong); }
+  .cat-card:hover .cat-icon-wrapper { background: var(--color-electric-iris); color: var(--color-snow); transform: scale(1.08); }
+  .cat-icon { width: 22px; height: 22px; }
+  .cat-card h3 { font-family: var(--font-inter); font-size: var(--text-heading-sm); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-8) 0; color: var(--text-primary); }
+  .cat-card p { font-family: var(--font-inter); font-size: var(--text-body); color: var(--text-secondary); margin-bottom: var(--spacing-16); flex: 1; line-height: 1.5; }
+  .cat-link { font-family: var(--font-inter); font-size: var(--text-body); font-weight: var(--font-weight-semibold); color: var(--color-electric-iris); display: flex; align-items: center; gap: var(--spacing-4); transition: gap 200ms var(--ease-out-strong); }
+  .cat-arrow { width: 16px; height: 16px; transition: transform 200ms var(--ease-out-strong); }
+  .cat-card:hover .cat-arrow { transform: translate(3px, -3px); }
+
+  .posts-section { position: relative; z-index: 1; padding: var(--spacing-64) 0 var(--spacing-160); border-top: 1px solid var(--border-subtle); }
+  .posts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: var(--spacing-20); }
+  .post-bezel { transition: transform 300ms var(--ease-out-strong), border-color 300ms var(--ease-out-strong), box-shadow 300ms var(--ease-out-strong); }
+  .post-bezel:hover { transform: translateY(-6px); border-color: var(--color-ember-pulse); box-shadow: 0 16px 48px rgba(255,137,100,0.1); }
+  .article-card a { text-decoration: none; display: flex; flex-direction: column; height: 100%; }
+  .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-12); font-family: var(--font-inter); font-size: var(--text-caption); color: var(--color-iron-veil); }
+  .article-card h3 { font-family: var(--font-inter); font-size: var(--text-heading-sm); font-weight: var(--font-weight-semibold); margin: 0 0 var(--spacing-8) 0; color: var(--text-primary); line-height: 1.3; }
+  .article-card p { font-family: var(--font-inter); font-size: var(--text-body); color: var(--text-secondary); margin-bottom: var(--spacing-16); flex: 1; line-height: 1.5; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: var(--spacing-12); font-family: var(--font-inter); font-size: var(--text-caption); }
+  .author { color: var(--color-iron-veil); }
+  .read-link { color: var(--color-ember-pulse); font-weight: var(--font-weight-semibold); display: flex; align-items: center; gap: var(--spacing-4); }
+  .read-icon { width: 14px; height: 14px; transition: transform 200ms var(--ease-out-strong); }
+  .article-card:hover .read-icon { transform: translateX(3px); }
+
+  @media (max-width: 868px) {
+    .hero { padding: 140px 0 60px; }
+    .hero-line-1 { font-size: clamp(32px, 9vw, 56px); }
+    .hero-line-2 { font-size: clamp(38px, 11vw, 68px); }
+    .hero-line-3 { font-size: clamp(32px, 9vw, 56px); }
+    .hero-glow { width: 500px; height: 300px; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .features-grid { grid-template-columns: 1fr; }
+    .category-grid, .posts-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; width: 100%; }
+  }
+  @media (max-width: 480px) {
+    .hero { padding: 120px 0 40px; }
+    .hero-line-1 { font-size: clamp(28px, 10vw, 40px); }
+    .hero-line-2 { font-size: clamp(34px, 12vw, 52px); }
+    .hero-line-3 { font-size: clamp(28px, 10vw, 40px); }
+    .hero-line { gap: 0.2em; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .stat-item { padding: var(--spacing-16) var(--spacing-12); }
+  }
+</style>

@@ -1,0 +1,91 @@
+{
+  "nav": {
+    "blog": "Blog",
+    "resources": "Resources",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "StackedTools Portal 2026",
+    "titleLine1a": "Discover,",
+    "titleLine1b": "Compare",
+    "titleLine1c": "&",
+    "titleLine2a": "Master",
+    "titleLine2b": "the",
+    "titleLine2c": "Best",
+    "titleLine3a": "Digital",
+    "titleLine3b": "Tools",
+    "subtitle": "In-depth reviews, head-to-head software comparisons, and no-code automation guides for modern creators, developers, and growth teams.",
+    "cta1": "Explore Categories",
+    "cta2": "Editorial Standards"
+  },
+  "stats": {
+    "toolsReviewed": "Tools Reviewed",
+    "monthlyReaders": "Monthly Readers",
+    "categories": "Content Categories",
+    "honestReviews": "Honest Reviews"
+  },
+  "features": {
+    "eyebrow": "Why StackedTools",
+    "title": "Built for People Who<br/>Actually Use Software",
+    "subtitle": "We test every tool with real workflows, real projects, and real money.",
+    "zeroAISlop": "Zero AI Slop",
+    "zeroAISlopDesc": "Every review is written by humans, tested hands-on, and verified for accuracy.",
+    "realPricing": "Real Pricing Data",
+    "realPricingDesc": "We track live pricing, discounts, and plan changes so you never overpay.",
+    "headToHead": "Head-to-Head Comparisons",
+    "headToHeadDesc": "Side-by-side feature breakdowns that make choosing software effortless.",
+    "noCode": "No-Code Automation",
+    "noCodeDesc": "Step-by-step guides to automate your workflow without writing a single line."
+  },
+  "categories": {
+    "eyebrow": "Core Silos",
+    "title": "Browse by Category",
+    "subtitle": "Explore our curated silos of software reviews and technical breakdowns.",
+    "aiTools": "AI Tools",
+    "aiToolsDesc": "Reviews & comparisons of cutting-edge AI software",
+    "productivity": "Productivity",
+    "productivityDesc": "Task management, note-taking & workflow systems",
+    "comparisons": "Comparisons",
+    "comparisonsDesc": "Head-to-head software showdowns and alternatives",
+    "automation": "Automation",
+    "automationDesc": "No-code tools, API integrations & automated workflows",
+    "businessSoftware": "Business Software",
+    "businessSoftwareDesc": "CRMs, email marketing & business operations",
+    "guides": "Guides & Tutorials",
+    "guidesDesc": "Actionable walkthroughs and step-by-step masterclasses",
+    "viewTools": "View tools"
+  },
+  "blog": {
+    "eyebrow": "Fresh Content",
+    "title": "Latest Articles & Reviews",
+    "subtitle": "Fresh insights verified by our software editorial team.",
+    "readPost": "Read post",
+    "by": "By",
+    "articles": "Articles",
+    "blogReviews": "Blog & Reviews",
+    "heroTitle": "Software Reviews That<br/><span class=\"hero-gradient\">Actually Help You Decide</span>",
+    "heroSub": "Honest, data-driven comparisons and guides. No AI slop, no sponsored rankings.",
+    "noArticles": "No articles found",
+    "tryDifferent": "Try selecting a different category.",
+    "minRead": "min read"
+  },
+  "recursos": {
+    "title": "Resources",
+    "heroTitle": "Tools Our Team<br/><span class=\"hero-gradient\">Uses Every Day</span>",
+    "heroSub": "Real recommendations, no sponsorships. Every tool has been tested by our team on real projects.",
+    "resources": "Resources",
+    "categories": "Categories",
+    "tested": "Tested"
+  },
+  "footer": {
+    "description": "In-depth software reviews, honest comparisons, and actionable guides. No AI slop, no sponsored rankings.",
+    "explore": "Explore",
+    "legal": "Legal",
+    "connect": "Connect",
+    "contact": "Contact",
+    "rss": "RSS Feed",
+    "copyright": "StackedTools",
+    "madeWith": "Built with obsessive attention to detail."
+  }
+}

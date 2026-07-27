@@ -1,0 +1,51 @@
+---
+import { Globe } from 'lucide-astro';
+
+interface Props {
+  currentLocale?: string;
+}
+
+const { currentLocale = 'en' } = Astro.props;
+const isEs = currentLocale === 'es';
+const switchPath = isEs
+  ? Astro.url.pathname.replace(/^\/es/, '') || '/'
+  : '/es' + Astro.url.pathname;
+---
+
+<a href={switchPath} class="lang-toggle" aria-label={isEs ? 'Switch to English' : 'Cambiar a español'}>
+  <Globe class="lang-icon" />
+  <span class="lang-label">{isEs ? 'EN' : 'ES'}</span>
+</a>
+
+<style>
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    height: 36px;
+    padding: 0 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-family: var(--font-inter);
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 200ms var(--ease-out-strong);
+    letter-spacing: 0.03em;
+  }
+  .lang-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+  .lang-icon {
+    width: 14px;
+    height: 14px;
+  }
+  .lang-label {
+    line-height: 1;
+  }
+</style>
