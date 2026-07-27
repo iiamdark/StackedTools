@@ -195,6 +195,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const logoutBtn = document.getElementById('logout-btn');
 
     let supabaseClient = null;
+    let supabaseLoaded = false;
+
+    function loadSupabase() {
+      return new Promise((resolve, reject) => {
+        if (supabaseLoaded && window.supabase) { resolve(window.supabase); return; }
+        if (window.supabase) { supabaseLoaded = true; resolve(window.supabase); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+        s.onload = function() { supabaseLoaded = true; resolve(window.supabase); };
+        s.onerror = function() { reject(new Error('Failed to load Supabase')); };
+        document.head.appendChild(s);
+      });
+    }
 
     function getSupabase() {
       if (supabaseClient) return supabaseClient;
@@ -212,26 +225,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     }
 
     async function checkAuth() {
-      const sb = getSupabase();
-      if (!sb) { loadPosts(); return; }
       try {
-        const { data: { session } } = await sb.auth.getSession();
+        await loadSupabase();
+        var sb = getSupabase();
+        if (!sb) { return; }
+        var result = await sb.auth.getSession();
+        var session = result && result.data && result.data.session;
         if (session) { showDashboard(); }
       } catch(e) { console.error('Auth check failed:', e); }
     }
 
     if (loginBtn) {
-      loginBtn.addEventListener('click', async () => {
-        const email = loginEmail.value.trim();
-        const password = loginPassword.value;
+      loginBtn.addEventListener('click', async function() {
+        var email = loginEmail.value.trim();
+        var password = loginPassword.value;
         if (!email || !password) {
           loginError.textContent = 'Enter email and password.';
-          loginError.style.display = '';
-          return;
-        }
-        const sb = getSupabase();
-        if (!sb) {
-          loginError.textContent = 'Auth service unavailable. Try again later.';
           loginError.style.display = '';
           return;
         }
@@ -239,28 +248,47 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         loginLoading.style.display = '';
         loginBtn.disabled = true;
 
-        const { error } = await sb.auth.signInWithPassword({ email, password });
+        try {
+          await loadSupabase();
+          var sb = getSupabase();
+          if (!sb) {
+            loginError.textContent = 'Auth service unavailable. Try again later.';
+            loginError.style.display = '';
+            loginLoading.style.display = 'none';
+            loginBtn.disabled = false;
+            return;
+          }
 
-        loginLoading.style.display = 'none';
-        loginBtn.disabled = false;
+          var result = await sb.auth.signInWithPassword({ email: email, password: password });
+          loginLoading.style.display = 'none';
+          loginBtn.disabled = false;
 
-        if (error) {
-          loginError.textContent = 'Invalid credentials. Try again.';
+          if (result.error) {
+            loginError.textContent = 'Invalid credentials. Try again.';
+            loginError.style.display = '';
+            loginPassword.value = '';
+            loginPassword.focus();
+          } else {
+            showDashboard();
+          }
+        } catch(err) {
+          loginLoading.style.display = 'none';
+          loginBtn.disabled = false;
+          loginError.textContent = 'Connection error. Check your internet.';
           loginError.style.display = '';
-          loginPassword.value = '';
-          loginPassword.focus();
-        } else {
-          showDashboard();
+          console.error('Login error:', err);
         }
       });
-      loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
-      loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+      loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
+      loginEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
     }
 
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        const sb = getSupabase();
-        if (sb) await sb.auth.signOut();
+      logoutBtn.addEventListener('click', async function() {
+        try {
+          var sb = getSupabase();
+          if (sb) await sb.auth.signOut();
+        } catch(e) {}
         localStorage.removeItem(MODIFIED_KEY);
         location.reload();
       });
