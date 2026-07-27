@@ -6,15 +6,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <!-- LOGIN GATE -->
   <div id="login-screen" class="login-screen">
+    <div class="login-bg-glow"></div>
     <div class="login-card">
-      <div class="login-icon">🔒</div>
-      <h1>Admin Dashboard</h1>
-      <p>Sign in with your admin credentials.</p>
-      <input type="email" id="login-email" placeholder="Email" class="login-input" />
-      <input type="password" id="login-password" placeholder="Password" class="login-input" />
-      <button id="login-btn" class="login-btn">Sign In</button>
-      <p id="login-error" class="login-error" style="display:none">Invalid credentials. Try again.</p>
-      <p id="login-loading" class="login-error" style="display:none">Signing in...</p>
+      <div class="login-logo">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+          <rect width="40" height="40" rx="10" fill="#5683da" fill-opacity="0.15"/>
+          <path d="M12 14h6v2h-6v-2zm0 4h10v2H12v-2zm0 4h8v2h-8v-2zm14-6l4 4-4 4v-3h-6v-2h6v-3z" fill="#5683da"/>
+        </svg>
+      </div>
+      <h1 class="login-title">StackedTools</h1>
+      <p class="login-subtitle">Admin Dashboard</p>
+      <form id="login-form" class="login-form" onsubmit="return false">
+        <div class="login-field">
+          <label class="login-label" for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="admin@stackedtools.com" class="login-input" autocomplete="email" />
+        </div>
+        <div class="login-field">
+          <label class="login-label" for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Enter password" class="login-input" autocomplete="current-password" />
+        </div>
+        <button id="login-btn" class="login-btn" type="submit">
+          <span class="login-btn-text">Sign In</span>
+          <span class="login-btn-loading" style="display:none">
+            <svg class="login-spinner" width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="28" stroke-dashoffset="8"/></svg>
+            Signing in...
+          </span>
+        </button>
+      </form>
+      <p id="login-error" class="login-error" style="display:none"></p>
+      <div class="login-footer">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        <span>Secured with Supabase Auth</span>
+      </div>
     </div>
   </div>
 
@@ -192,9 +215,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const loginEmail = document.getElementById('login-email');
     const loginPassword = document.getElementById('login-password');
     const loginBtn = document.getElementById('login-btn');
+    const loginForm = document.getElementById('login-form');
     const loginError = document.getElementById('login-error');
-    const loginLoading = document.getElementById('login-loading');
     const logoutBtn = document.getElementById('logout-btn');
+
+    function setLoginLoading(loading) {
+      var btnText = loginBtn.querySelector('.login-btn-text');
+      var btnLoad = loginBtn.querySelector('.login-btn-loading');
+      loginBtn.disabled = loading;
+      if (loading) {
+        btnText.style.display = 'none';
+        btnLoad.style.display = '';
+        loginError.style.display = 'none';
+      } else {
+        btnText.style.display = '';
+        btnLoad.style.display = 'none';
+      }
+    }
+
+    function showLoginError(msg) {
+      loginError.textContent = msg;
+      loginError.style.display = '';
+    }
 
     let supabaseClient = null;
     let supabaseLoaded = false;
@@ -237,52 +279,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       } catch(e) { console.error('Auth check failed:', e); }
     }
 
-    if (loginBtn) {
-      loginBtn.addEventListener('click', async function() {
+    if (loginForm) {
+      loginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
         var email = loginEmail.value.trim();
         var password = loginPassword.value;
         if (!email || !password) {
-          loginError.textContent = 'Enter email and password.';
-          loginError.style.display = '';
+          showLoginError('Please enter both email and password.');
           return;
         }
-        loginError.style.display = 'none';
-        loginLoading.style.display = '';
-        loginBtn.disabled = true;
+        setLoginLoading(true);
 
         try {
           await loadSupabase();
           var sb = getSupabase();
           if (!sb) {
-            loginError.textContent = 'Auth service unavailable. Try again later.';
-            loginError.style.display = '';
-            loginLoading.style.display = 'none';
-            loginBtn.disabled = false;
+            setLoginLoading(false);
+            showLoginError('Auth service unavailable. Try again later.');
             return;
           }
 
           var result = await sb.auth.signInWithPassword({ email: email, password: password });
-          loginLoading.style.display = 'none';
-          loginBtn.disabled = false;
+          setLoginLoading(false);
 
           if (result.error) {
-            loginError.textContent = 'Invalid credentials. Try again.';
-            loginError.style.display = '';
+            showLoginError('Invalid email or password. Please try again.');
             loginPassword.value = '';
             loginPassword.focus();
           } else {
             showDashboard();
           }
         } catch(err) {
-          loginLoading.style.display = 'none';
-          loginBtn.disabled = false;
-          loginError.textContent = 'Connection error. Check your internet.';
-          loginError.style.display = '';
+          setLoginLoading(false);
+          showLoginError('Connection error. Check your internet and try again.');
           console.error('Login error:', err);
         }
       });
-      loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
-      loginEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') loginBtn.click(); });
     }
 
     if (logoutBtn) {
@@ -292,6 +324,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           if (sb) await sb.auth.signOut();
         } catch(e) {}
         localStorage.removeItem(MODIFIED_KEY);
+        localStorage.removeItem(PUBLISHED_KEY);
         location.reload();
       });
     }
@@ -403,6 +436,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     updateStats();
   }
 
+  function openNewPost() {
+    currentEditId = '__new__';
+    document.getElementById('edit-title').value = '';
+    document.getElementById('edit-desc').value = '';
+    document.getElementById('edit-category').value = 'ai-tools';
+    document.getElementById('edit-author').value = 'StackedTools Team';
+    document.getElementById('edit-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('edit-body').value = '';
+    document.getElementById('edit-modal').querySelector('.edit-panel-header h2').textContent = 'New Article';
+    editModal.style.display = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  var newPostBtn = document.getElementById('new-post-btn');
+  if (newPostBtn) {
+    newPostBtn.addEventListener('click', openNewPost);
+  }
+
   // Filters
   document.querySelectorAll('#admin-filters .admin-filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
@@ -450,6 +501,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     editModal.style.display = 'none';
     document.body.style.overflow = '';
     currentEditId = null;
+    document.getElementById('edit-modal').querySelector('.edit-panel-header h2').textContent = 'Edit Article';
   }
 
   if (editClose) editClose.addEventListener('click', closeEdit);
@@ -459,39 +511,74 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   if (editSave) {
     editSave.addEventListener('click', () => {
       if (!currentEditId) return;
-      const post = allPosts.find(p => p.id === currentEditId);
 
-      modifiedPosts[currentEditId] = {
-        title: document.getElementById('edit-title').value,
-        description: document.getElementById('edit-desc').value,
-        category: document.getElementById('edit-category').value,
-        author: document.getElementById('edit-author').value,
-        pubDate: document.getElementById('edit-date').value,
-        body: document.getElementById('edit-body').value,
-        original: {
-          title: post.data.title,
-          description: post.data.description,
-          category: post.data.category,
-          author: post.data.author,
-          pubDate: post.data.pubDate,
-          body: post.body,
+      var titleVal = document.getElementById('edit-title').value.trim();
+      var descVal = document.getElementById('edit-desc').value.trim();
+      var bodyVal = document.getElementById('edit-body').value.trim();
+      if (!titleVal || !bodyVal) {
+        alert('Title and content are required.');
+        return;
+      }
+
+      if (currentEditId === '__new__') {
+        var slug = titleVal.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        var newPost = {
+          id: slug,
+          slug: slug,
+          data: {
+            title: titleVal,
+            description: descVal,
+            category: document.getElementById('edit-category').value,
+            author: document.getElementById('edit-author').value,
+            pubDate: document.getElementById('edit-date').value,
+          },
+          body: bodyVal,
+        };
+        allPosts.unshift(newPost);
+        modifiedPosts[slug] = {
+          title: titleVal,
+          description: descVal,
+          category: document.getElementById('edit-category').value,
+          author: document.getElementById('edit-author').value,
+          pubDate: document.getElementById('edit-date').value,
+          body: bodyVal,
+          isNew: true,
+          original: null,
+        };
+        localStorage.setItem(MODIFIED_KEY, JSON.stringify(modifiedPosts));
+      } else {
+        const post = allPosts.find(p => p.id === currentEditId);
+        modifiedPosts[currentEditId] = {
+          title: titleVal,
+          description: descVal,
+          category: document.getElementById('edit-category').value,
+          author: document.getElementById('edit-author').value,
+          pubDate: document.getElementById('edit-date').value,
+          body: bodyVal,
+          original: post ? {
+            title: post.data.title,
+            description: post.data.description,
+            category: post.data.category,
+            author: post.data.author,
+            pubDate: post.data.pubDate,
+            body: post.body,
+          } : null,
+        };
+        localStorage.setItem(MODIFIED_KEY, JSON.stringify(modifiedPosts));
+        if (post) {
+          post.data.title = titleVal;
+          post.data.description = descVal;
+          post.data.category = document.getElementById('edit-category').value;
+          post.data.author = document.getElementById('edit-author').value;
+          post.data.pubDate = document.getElementById('edit-date').value;
+          post.body = bodyVal;
         }
-      };
-
-      localStorage.setItem(MODIFIED_KEY, JSON.stringify(modifiedPosts));
-
-      // Update allPosts too
-      post.data.title = modifiedPosts[currentEditId].title;
-      post.data.description = modifiedPosts[currentEditId].description;
-      post.data.category = modifiedPosts[currentEditId].category;
-      post.data.author = modifiedPosts[currentEditId].author;
-      post.data.pubDate = modifiedPosts[currentEditId].pubDate;
-      post.body = modifiedPosts[currentEditId].body;
+      }
 
       const indicator = document.getElementById('saved-indicator');
       if (indicator) { indicator.style.display = ''; setTimeout(() => { indicator.style.display = 'none'; }, 2000); }
 
-      renderTable();
+      applyFilters();
       updateStats();
       closeEdit();
     });
@@ -605,48 +692,85 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 </BaseLayout>
 
 <style>
-  /* LOGIN */
+  /* ========== LOGIN ========== */
   .login-screen {
-    min-height: 80vh; display: flex; align-items: center; justify-content: center;
-    padding: var(--spacing-40);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: var(--spacing-40); position: relative; overflow: hidden;
+  }
+  .login-bg-glow {
+    position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%);
+    width: 500px; height: 500px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(86,131,218,0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
   .login-card {
-    text-align: center; max-width: 360px; width: 100%;
-    background: var(--bg-card-inner); border: 1px solid var(--border-color);
-    border-radius: var(--radius-cards); padding: var(--spacing-40);
+    text-align: center; max-width: 400px; width: 100%;
+    background: var(--color-charcoal-card); border: 1px solid var(--border-color);
+    border-radius: 16px; padding: 48px 40px 40px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+    position: relative; z-index: 1;
   }
-  .login-icon { font-size: 48px; margin-bottom: var(--spacing-16); }
-  .login-card h1 {
-    font-family: var(--font-inter); font-size: 22px; font-weight: 700;
-    color: var(--text-primary); margin-bottom: var(--spacing-8);
+  .login-logo {
+    display: flex; justify-content: center; margin-bottom: 20px;
   }
-  .login-card p {
-    font-family: var(--font-inter); font-size: 14px;
-    color: var(--text-secondary); margin-bottom: var(--spacing-20);
+  .login-logo svg { filter: drop-shadow(0 2px 8px rgba(86,131,218,0.3)); }
+  .login-title {
+    font-family: var(--font-inter); font-size: 22px; font-weight: 800;
+    color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.03em;
+  }
+  .login-subtitle {
+    font-family: var(--font-inter); font-size: 13px;
+    color: var(--color-iron-veil); margin-bottom: 32px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .login-form { display: flex; flex-direction: column; gap: 16px; text-align: left; }
+  .login-field { display: flex; flex-direction: column; gap: 6px; }
+  .login-label {
+    font-family: var(--font-inter); font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); letter-spacing: 0.02em;
   }
   .login-input {
-    width: 100%; padding: 10px 14px; border-radius: var(--radius-md);
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
     color: var(--text-primary); font-family: var(--font-inter); font-size: 14px;
-    outline: none; margin-bottom: var(--spacing-12);
+    outline: none; transition: all 200ms;
   }
-  .login-input:focus { border-color: var(--color-electric-iris); }
+  .login-input::placeholder { color: var(--color-iron-veil); }
+  .login-input:focus {
+    border-color: var(--color-electric-iris);
+    background: rgba(86,131,218,0.04);
+    box-shadow: 0 0 0 3px rgba(86,131,218,0.1);
+  }
   .login-btn {
-    width: 100%; padding: 10px; border-radius: var(--radius-md);
+    width: 100%; padding: 12px; border-radius: 8px;
     background: var(--color-electric-iris); color: #fff; border: none;
     font-family: var(--font-inter); font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: opacity 200ms;
+    cursor: pointer; transition: all 200ms; margin-top: 8px;
+    position: relative;
   }
-  .login-btn:hover { opacity: 0.9; }
+  .login-btn:hover:not(:disabled) { background: #4a75c9; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(86,131,218,0.3); }
+  .login-btn:active:not(:disabled) { transform: translateY(0); }
+  .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .login-btn-loading { display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .login-spinner { animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
   .login-error {
     font-family: var(--font-inter); font-size: 13px;
-    color: #ef4444; margin-top: var(--spacing-12);
+    color: #ef4444; margin-top: 16px; padding: 10px 14px;
+    background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.15);
+    border-radius: 8px; text-align: left;
+  }
+  .login-footer {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-top: 24px; font-family: var(--font-inter); font-size: 11px;
+    color: var(--color-iron-veil); opacity: 0.6;
   }
 
-  /* TOPBAR */
+  /* ========== TOPBAR ========== */
   .admin-topbar {
     background: var(--bg-card-inner); border-bottom: 1px solid var(--border-color);
     padding: var(--spacing-16) 0; position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
   }
   .topbar-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-12); }
   .topbar-left { display: flex; align-items: center; gap: var(--spacing-12); }
@@ -669,16 +793,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     padding: 7px 16px; border-radius: var(--radius-full);
     background: var(--color-electric-iris); color: #fff; border: none;
     font-family: var(--font-inter); font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: opacity 200ms;
+    cursor: pointer; transition: all 200ms;
   }
-  .topbar-btn:hover { opacity: 0.9; }
+  .topbar-btn:hover { opacity: 0.9; transform: translateY(-1px); }
   .topbar-btn-outline {
     background: transparent; border: 1px solid var(--border-color);
     color: var(--text-secondary);
   }
   .topbar-btn-outline:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
 
-  /* STATS */
+  /* ========== STATS ========== */
   .admin-stats {
     display: grid; grid-template-columns: repeat(6, 1fr);
     gap: var(--spacing-12); margin-bottom: var(--spacing-24);
@@ -686,8 +810,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .admin-stat-card {
     background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md); padding: var(--spacing-16);
-    text-align: center;
+    text-align: center; transition: border-color 200ms;
   }
+  .admin-stat-card:hover { border-color: var(--border-color); }
   .admin-stat-value {
     display: block; font-family: var(--font-inter); font-size: 24px;
     font-weight: 700; color: var(--text-primary); margin-bottom: 4px;
@@ -698,7 +823,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     letter-spacing: 0.05em;
   }
 
-  /* TOOLBAR */
+  /* ========== TOOLBAR ========== */
   .admin-toolbar {
     display: flex; flex-direction: column; gap: var(--spacing-12);
     margin-bottom: var(--spacing-20);
@@ -707,7 +832,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     display: flex; align-items: center; gap: var(--spacing-8);
     padding: var(--spacing-8) var(--spacing-12);
     background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-cards);
+    border-radius: var(--radius-cards); transition: border-color 200ms;
   }
   .admin-search:focus-within { border-color: var(--color-electric-iris); }
   .admin-search-icon { color: var(--color-iron-veil); min-width: 16px; }
@@ -729,7 +854,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-color: var(--color-electric-iris);
   }
 
-  /* TABLE */
+  /* ========== TABLE ========== */
   .admin-table-wrap { overflow-x: auto; }
   .admin-table {
     width: 100%; border-collapse: collapse;
@@ -763,9 +888,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     text-transform: capitalize;
   }
 
-  .status-modified { color: #10b981; font-weight: 600; font-size: 12px; }
-  .status-clean { color: var(--color-iron-veil); font-size: 12px; }
-
   .publish-toggle {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 4px 10px; border-radius: var(--radius-full);
@@ -783,9 +905,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-color: var(--border-subtle);
   }
   .publish-toggle.draft:hover { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
-  .publish-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-  }
+  .publish-dot { width: 6px; height: 6px; border-radius: 50%; }
   .publish-toggle.published .publish-dot { background: #10b981; }
   .publish-toggle.draft .publish-dot { background: var(--color-iron-veil); }
 
@@ -808,102 +928,137 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   .admin-empty { text-align: center; padding: var(--spacing-48); color: var(--color-iron-veil); font-family: var(--font-inter); }
 
-  /* EDIT MODAL */
+  /* ========== EDIT MODAL ========== */
   .edit-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: stretch; justify-content: flex-end; }
-  .edit-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+  .edit-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); }
   .edit-panel {
     position: relative; width: 100%; max-width: 640px;
     background: var(--color-void); border-left: 1px solid var(--border-color);
     display: flex; flex-direction: column;
     animation: slideIn 0.3s cubic-bezier(0.23,1,0.32,1);
+    box-shadow: -8px 0 32px rgba(0,0,0,0.3);
   }
   @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
   .edit-panel-header {
     display: flex; justify-content: space-between; align-items: center;
-    padding: var(--spacing-20) var(--spacing-24);
+    padding: 20px 24px;
     border-bottom: 1px solid var(--border-color);
+    background: var(--color-charcoal-card);
   }
   .edit-panel-header h2 {
-    font-family: var(--font-inter); font-size: 18px; font-weight: 700;
+    font-family: var(--font-inter); font-size: 16px; font-weight: 700;
     color: var(--text-primary);
   }
   .edit-close {
-    width: 32px; height: 32px; border-radius: var(--radius-full);
-    background: rgba(255,255,255,0.05); border: none; color: var(--text-secondary);
-    font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; border-radius: 8px;
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-secondary); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
     transition: all 150ms;
   }
-  .edit-close:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+  .edit-close:hover { background: rgba(239,68,68,0.15); color: #ef4444; border-color: rgba(239,68,68,0.2); }
 
   .edit-panel-body {
-    flex: 1; overflow-y: auto; padding: var(--spacing-24);
-    display: flex; flex-direction: column; gap: var(--spacing-16);
+    flex: 1; overflow-y: auto; padding: 24px;
+    display: flex; flex-direction: column; gap: 20px;
   }
   .edit-field { display: flex; flex-direction: column; gap: 6px; }
   .edit-field label {
-    font-family: var(--font-inter); font-size: 12px; font-weight: 600;
-    color: var(--text-secondary); text-transform: uppercase;
-    letter-spacing: 0.04em;
+    font-family: var(--font-inter); font-size: 11px; font-weight: 700;
+    color: var(--color-iron-veil); text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
   .edit-input, .edit-textarea, .edit-select {
-    width: 100%; padding: 8px 12px; border-radius: var(--radius-md);
-    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    width: 100%; padding: 10px 12px; border-radius: 8px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
     color: var(--text-primary); font-family: var(--font-inter); font-size: 13px;
-    outline: none; transition: border-color 200ms;
+    outline: none; transition: all 200ms;
   }
-  .edit-input:focus, .edit-textarea:focus, .edit-select:focus { border-color: var(--color-electric-iris); }
+  .edit-input::placeholder, .edit-textarea::placeholder { color: var(--color-iron-veil); }
+  .edit-input:focus, .edit-textarea:focus, .edit-select:focus {
+    border-color: var(--color-electric-iris);
+    background: rgba(86,131,218,0.04);
+    box-shadow: 0 0 0 3px rgba(86,131,218,0.08);
+  }
   .edit-textarea { resize: vertical; line-height: 1.6; }
-  .edit-body { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12px; min-height: 400px; }
+  .edit-body {
+    font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 12px; min-height: 400px; line-height: 1.7;
+    tab-size: 2;
+  }
   .edit-select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
-    padding-right: 32px;
+    padding-right: 32px; cursor: pointer;
   }
   .edit-select option { background: #1a1a2e; color: var(--text-primary); }
-  .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-12); }
+  .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
   .edit-panel-footer {
     display: flex; justify-content: space-between; align-items: center;
-    padding: var(--spacing-16) var(--spacing-24);
+    padding: 16px 24px;
     border-top: 1px solid var(--border-color);
+    background: var(--color-charcoal-card);
   }
-  .edit-footer-right { display: flex; gap: var(--spacing-8); }
+  .edit-footer-right { display: flex; gap: 8px; }
   .edit-btn {
-    padding: 8px 18px; border-radius: var(--radius-full);
+    padding: 9px 20px; border-radius: 8px;
     font-family: var(--font-inter); font-size: 13px; font-weight: 600;
     cursor: pointer; transition: all 150ms;
   }
-  .edit-btn-primary { background: var(--color-electric-iris); color: #fff; border: none; }
-  .edit-btn-primary:hover { opacity: 0.9; }
+  .edit-btn-primary {
+    background: var(--color-electric-iris); color: #fff; border: none;
+  }
+  .edit-btn-primary:hover { background: #4a75c9; box-shadow: 0 2px 8px rgba(86,131,218,0.3); }
   .edit-btn-outline {
-    background: transparent; border: 1px solid var(--border-color);
+    background: transparent; border: 1px solid rgba(255,255,255,0.1);
     color: var(--text-secondary);
   }
   .edit-btn-outline:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
 
-  /* PREVIEW */
+  /* ========== PREVIEW ========== */
   .preview-panel { max-width: 720px; }
   .preview-content {
     font-family: var(--font-inter); color: var(--text-secondary); line-height: 1.7;
   }
   .preview-article h1 {
-    font-size: 24px; font-weight: 700; color: var(--text-primary);
-    margin-bottom: var(--spacing-8); line-height: 1.2;
+    font-size: 22px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 8px; line-height: 1.3;
   }
   .preview-meta {
-    font-size: 12px; color: var(--color-iron-veil); margin-bottom: var(--spacing-24);
-    text-transform: capitalize;
+    font-size: 12px; color: var(--color-iron-veil); margin-bottom: 24px;
+    text-transform: capitalize; padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
   }
-  .preview-body :global(h2) { font-size: 18px; color: var(--text-primary); margin: 20px 0 8px; }
-  .preview-body :global(h3) { font-size: 16px; color: var(--text-primary); margin: 16px 0 6px; }
-  .preview-body :global(strong) { color: var(--text-primary); }
+  .preview-body h2 {
+    font-size: 18px; font-weight: 700; color: var(--text-primary);
+    margin: 24px 0 8px;
+  }
+  .preview-body h3 {
+    font-size: 15px; font-weight: 600; color: var(--text-primary);
+    margin: 18px 0 6px;
+  }
+  .preview-body p { margin-bottom: 12px; }
+  .preview-body strong { color: var(--text-primary); font-weight: 600; }
+  .preview-body em { font-style: italic; }
+  .preview-body code {
+    background: rgba(255,255,255,0.06); padding: 2px 6px;
+    border-radius: 4px; font-size: 0.85em;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: var(--color-electric-iris);
+  }
+  .preview-body li {
+    margin-bottom: 4px; padding-left: 4px;
+  }
+  .preview-body ul { padding-left: 20px; margin-bottom: 12px; }
 
   @media (max-width: 868px) {
     .admin-stats { grid-template-columns: repeat(3, 1fr); }
     .topbar-inner { flex-direction: column; align-items: flex-start; }
     .edit-panel { max-width: 100%; }
     .edit-row { grid-template-columns: 1fr; }
+    .login-card { padding: 32px 24px; }
   }
 </style>
