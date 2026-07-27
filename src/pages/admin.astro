@@ -179,79 +179,77 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </div>
 
-</BaseLayout>
+  <script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script is:inline>
+  (function() {
+    const MODIFIED_KEY = 'st_admin_modified';
+    const SUPABASE_URL = 'https://muhhvygrzcfuyyfkfwtb.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11aGh2eWdyemNmdXl5Zmtmd3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzMxNjMsImV4cCI6MjEwMDcwOTE2M30.XuGE-4YAmetPRQz_6imyXVL7IFAwuZK9UnrL50oPACM';
 
-<script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script is:inline>
-(function() {
-  const MODIFIED_KEY = 'st_admin_modified';
-  const SUPABASE_URL = 'https://muhhvygrzcfuyyfkfwtb.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11aGh2eWdyemNmdXl5Zmtmd3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzMxNjMsImV4cCI6MjEwMDcwOTE2M30.XuGE-4YAmetPRQz_6imyXVL7IFAwuZK9UnrL50oPACM';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const loginScreen = document.getElementById('login-screen');
+    const adminApp = document.getElementById('admin-app');
+    const loginEmail = document.getElementById('login-email');
+    const loginPassword = document.getElementById('login-password');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+    const loginLoading = document.getElementById('login-loading');
+    const logoutBtn = document.getElementById('logout-btn');
 
-  const loginScreen = document.getElementById('login-screen');
-  const adminApp = document.getElementById('admin-app');
-  const loginEmail = document.getElementById('login-email');
-  const loginPassword = document.getElementById('login-password');
-  const loginBtn = document.getElementById('login-btn');
-  const loginError = document.getElementById('login-error');
-  const loginLoading = document.getElementById('login-loading');
-  const logoutBtn = document.getElementById('logout-btn');
-
-  function showDashboard() {
-    loginScreen.style.display = 'none';
-    adminApp.style.display = '';
-    loadPosts();
-  }
-
-  async function checkAuth() {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) {
-      showDashboard();
+    function showDashboard() {
+      loginScreen.style.display = 'none';
+      adminApp.style.display = '';
+      loadPosts();
     }
-  }
 
-  if (loginBtn) {
-    loginBtn.addEventListener('click', async () => {
-      const email = loginEmail.value.trim();
-      const password = loginPassword.value;
-      if (!email || !password) {
-        loginError.textContent = 'Enter email and password.';
-        loginError.style.display = '';
-        return;
-      }
-      loginError.style.display = 'none';
-      loginLoading.style.display = '';
-      loginBtn.disabled = true;
-
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-      loginLoading.style.display = 'none';
-      loginBtn.disabled = false;
-
-      if (error) {
-        loginError.textContent = 'Invalid credentials. Try again.';
-        loginError.style.display = '';
-        loginPassword.value = '';
-        loginPassword.focus();
-      } else {
+    async function checkAuth() {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
         showDashboard();
       }
-    });
-    loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
-    loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
-  }
+    }
 
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', async () => {
-      await supabaseClient.auth.signOut();
-      localStorage.removeItem(MODIFIED_KEY);
-      location.reload();
-    });
-  }
+    if (loginBtn) {
+      loginBtn.addEventListener('click', async () => {
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value;
+        if (!email || !password) {
+          loginError.textContent = 'Enter email and password.';
+          loginError.style.display = '';
+          return;
+        }
+        loginError.style.display = 'none';
+        loginLoading.style.display = '';
+        loginBtn.disabled = true;
 
-  checkAuth();
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+        loginLoading.style.display = 'none';
+        loginBtn.disabled = false;
+
+        if (error) {
+          loginError.textContent = 'Invalid credentials. Try again.';
+          loginError.style.display = '';
+          loginPassword.value = '';
+          loginPassword.focus();
+        } else {
+          showDashboard();
+        }
+      });
+      loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+      loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        await supabaseClient.auth.signOut();
+        localStorage.removeItem(MODIFIED_KEY);
+        location.reload();
+      });
+    }
+
+    checkAuth();
 
   // State
   let allPosts = [];
@@ -538,8 +536,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   // Global handlers
   window.__editPost = openEdit;
   window.__downloadPost = downloadMd;
-})();
-</script>
+  })();
+  </script>
+
+</BaseLayout>
 
 <style>
   /* LOGIN */
