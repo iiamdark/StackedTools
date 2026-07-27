@@ -1,13 +1,9 @@
 ---
-import { Bot, Zap, GitCompare, Workflow, Briefcase, BookOpen, ChevronRight, Menu, X, Sun, Moon } from 'lucide-astro';
+import { BookOpen, Library, Menu, X, Sun, Moon } from 'lucide-astro';
 
 const navItems = [
-  { name: 'AI Tools', href: '/ai-tools', icon: Bot },
-  { name: 'Productivity', href: '/productivity', icon: Zap },
-  { name: 'Comparisons', href: '/comparisons', icon: GitCompare },
-  { name: 'Automation', href: '/automation', icon: Workflow },
-  { name: 'Business', href: '/business-software', icon: Briefcase },
-  { name: 'Guides', href: '/guides', icon: BookOpen },
+  { name: 'Blog', href: '/blog', icon: BookOpen },
+  { name: 'Recursos', href: '/recursos', icon: Library },
 ];
 ---
 
@@ -38,13 +34,6 @@ const navItems = [
         <Moon class="theme-icon moon-icon" />
       </button>
 
-      <a href="/guides" class="btn-tactile btn-primary-tactile nav-btn">
-        <span>Explore Guides</span>
-        <div class="btn-icon-wrapper">
-          <ChevronRight class="btn-icon" />
-        </div>
-      </a>
-
       <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
         <Menu class="menu-icon" />
       </button>
@@ -68,10 +57,6 @@ const navItems = [
           </a>
         );
       })}
-      <a href="/guides" class="mobile-nav-link mobile-cta">
-        <BookOpen class="mobile-nav-icon" />
-        <span>Explore Guides</span>
-      </a>
     </nav>
   </div>
 </header>
@@ -239,16 +224,6 @@ const navItems = [
   :global(html[data-theme="light"]) .sun-icon { display: none; }
   :global(html[data-theme="light"]) .moon-icon { display: block; }
 
-  .nav-btn {
-    padding: var(--spacing-8) var(--spacing-20);
-    font-size: var(--text-caption);
-  }
-
-  .btn-icon {
-    width: 14px;
-    height: 14px;
-  }
-
   .mobile-menu-btn {
     display: none;
     align-items: center;
@@ -359,18 +334,6 @@ const navItems = [
   }
 
   .mobile-nav-link:hover .mobile-nav-icon {
-    color: var(--color-electric-iris);
-  }
-
-  .mobile-cta {
-    margin-top: var(--spacing-16);
-    background: rgba(86, 131, 218, 0.08);
-    border: 1px solid rgba(86, 131, 218, 0.15);
-    color: var(--color-electric-iris);
-  }
-
-  .mobile-cta:hover {
-    background: rgba(86, 131, 218, 0.15);
     color: var(--color-electric-iris);
   }
 
