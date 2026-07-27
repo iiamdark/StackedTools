@@ -25,28 +25,63 @@ const { title, description } = Astro.props;
 <style>
   .page-container {
     max-width: 800px;
-    padding-top: 3rem;
-    padding-bottom: 4rem;
+    padding-top: var(--spacing-40);
+    padding-bottom: var(--spacing-64);
   }
 
   .page-header {
-    margin-bottom: 2.5rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: var(--spacing-32);
+    padding-bottom: var(--spacing-24);
     border-bottom: 1px solid var(--border-color);
   }
 
   .lead {
-    font-size: 1.125rem;
+    font-family: var(--font-inter);
+    font-size: var(--text-body-lg);
     color: var(--text-secondary);
-    margin-top: 0.5rem;
+    margin-top: var(--spacing-8);
+    line-height: var(--leading-body-lg);
+    letter-spacing: var(--tracking-body-lg);
   }
 
   .page-content :global(h2) {
-    margin-top: 2rem;
-    font-size: 1.5rem;
+    margin-top: var(--spacing-32);
+    font-family: var(--font-inter);
+    font-size: var(--text-heading);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
   }
 
   .page-content :global(p) {
-    margin-bottom: 1.25rem;
+    margin-bottom: var(--spacing-20);
+    font-family: var(--font-inter);
+    font-size: var(--text-body-lg);
+    line-height: var(--leading-body-lg);
+    color: var(--text-secondary);
+    letter-spacing: var(--tracking-body-lg);
+  }
+
+  .page-content :global(ul) {
+    margin-bottom: var(--spacing-20);
+    padding-left: var(--spacing-24);
+    color: var(--text-secondary);
+  }
+
+  .page-content :global(li) {
+    margin-bottom: var(--spacing-8);
+    font-family: var(--font-inter);
+    font-size: var(--text-body-lg);
+    line-height: var(--leading-body-lg);
+    letter-spacing: var(--tracking-body-lg);
+  }
+
+  .page-content :global(a) {
+    color: var(--color-electric-iris);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .page-content :global(a:hover) {
+    color: #6b93e5;
   }
 </style>

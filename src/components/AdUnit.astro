@@ -7,14 +7,12 @@ interface Props {
 
 const { slotId, format = 'auto', responsive = true } = Astro.props;
 
-// Replace with actual AdSense client ID when approved
-const adsenseClientId = "ca-pub-XXXXXXXXXXXXXXXX"; 
+const adsenseClientId = "ca-pub-XXXXXXXXXXXXXXXX";
 ---
 
 <div class="ad-unit-container">
   <span class="ad-label">Advertisement</span>
-  
-  {/* Production AdSense Script Container */}
+
   <ins class="adsbygoogle"
        style="display:block; text-align:center;"
        data-ad-client={adsenseClientId}
@@ -22,7 +20,7 @@ const adsenseClientId = "ca-pub-XXXXXXXXXXXXXXXX";
        data-ad-format={format}
        data-full-width-responsive={responsive ? "true" : "false"}>
   </ins>
-  
+
   <script is:inline>
     (adsbygoogle = window.adsbygoogle || []).push({});
   </script>
