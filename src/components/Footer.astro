@@ -1,0 +1,139 @@
+---
+const currentYear = new Date().getFullYear();
+
+const categories = [
+  { name: 'AI Tools', href: '/ai-tools' },
+  { name: 'Productivity', href: '/productivity' },
+  { name: 'Comparisons', href: '/comparisons' },
+  { name: 'Automation', href: '/automation' },
+  { name: 'Business Software', href: '/business-software' },
+  { name: 'Guides', href: '/guides' },
+];
+
+const legals = [
+  { name: 'About Us', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+  { name: 'Privacy Policy', href: '/privacy-policy' },
+  { name: 'Terms of Service', href: '/terms' },
+  { name: 'Disclaimer', href: '/disclaimer' },
+  { name: 'Cookie Policy', href: '/cookie-policy' },
+];
+---
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          Stacked<span class="highlight">Tools</span>
+        </a>
+        <p class="brand-desc">
+          Discover, compare, and master the best digital tools. In-depth reviews, honest comparisons, and actionable guides — zero filler.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="col-title">Categories</h4>
+        <ul class="col-list">
+          {categories.map(cat => (
+            <li><a href={cat.href}>{cat.name}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="col-title">Company & Legal</h4>
+        <ul class="col-list">
+          {legals.map(item => (
+            <li><a href={item.href}>{item.name}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; {currentYear} StackedTools.online. All rights reserved.</p>
+      <p class="affiliate-notice">
+        Disclaimer: Some links on this site may be affiliate links. We may earn a commission if you make a purchase through these links at no extra cost to you.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #070708;
+    border-top: 1px solid var(--border-color);
+    padding: 4rem 0 2rem;
+    margin-top: 4rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .highlight {
+    color: var(--accent-blue);
+  }
+
+  .brand-desc {
+    margin-top: 1rem;
+    max-width: 380px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .col-title {
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+
+  }
+
+  .col-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .col-list a {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .col-list a:hover {
+    color: var(--accent-blue);
+  }
+
+  .footer-bottom {
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  .affiliate-notice {
+    font-size: 0.75rem;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

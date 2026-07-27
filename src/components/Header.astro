@@ -1,0 +1,92 @@
+---
+import { Wrench } from 'lucide-astro';
+
+const navItems = [
+  { name: 'AI Tools', href: '/ai-tools' },
+  { name: 'Productivity', href: '/productivity' },
+  { name: 'Comparisons', href: '/comparisons' },
+  { name: 'Automation', href: '/automation' },
+  { name: 'Business', href: '/business-software' },
+  { name: 'Guides', href: '/guides' },
+];
+---
+
+<header class="site-header">
+  <div class="container header-container">
+    <a href="/" class="logo">
+      <img src="/logo.png" alt="StackedTools Logo" class="logo-img" />
+      <span class="logo-text">Stacked<span class="highlight">Tools</span></span>
+    </a>
+
+    <nav class="desktop-nav">
+      {navItems.map(item => (
+        <a href={item.href} class="nav-link">{item.name}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg-glass);
+    backdrop-filter: var(--glass-backdrop);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 4.25rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: var(--text-primary);
+    font-weight: 800;
+    font-size: 1.25rem;
+  }
+
+  .logo-img {
+    height: 2.75rem;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .icon {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .highlight {
+    color: var(--accent-blue);
+  }
+
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .nav-link {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 768px) {
+    .desktop-nav {
+      display: none;
+    }
+  }
+</style>

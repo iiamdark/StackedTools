@@ -1,0 +1,52 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="About StackedTools"
+  description="Discover our mission, editorial standards, and the team behind StackedTools.online."
+>
+  <h2>Our Mission</h2>
+  <p>
+    StackedTools was built with a simple goal: to help modern professionals, creators, and teams find, compare, and master the best digital software without the marketing fluff.
+  </p>
+  <p>
+    In a sea of generic reviews and sponsored content, we prioritize objective testing, real data, clear comparison tables, and actionable verdicts so you can make informed decisions fast.
+  </p>
+
+  <h2>Editorial Standards & E-E-A-T</h2>
+  <p>
+    Every piece of content on StackedTools follows rigorous editorial guidelines:
+  </p>
+  <ul>
+    <li><strong>Hands-On Testing:</strong> We evaluate tools based on actual user workflows, feature capabilities, pricing tiers, and practical limitations.</li>
+    <li><strong>Unbiased Verdicts:</strong> Our recommendations are never sold to the highest bidder. If a tool has drawbacks, we highlight them clearly.</li>
+    <li><strong>Up-to-Date Information:</strong> Digital tools evolve quickly. We review and update our comparison guides regularly to ensure pricing and features remain accurate.</li>
+  </ul>
+
+  <h2>Editorial Team</h2>
+  <p>
+    Our content is produced by tech enthusiasts and software reviewers committed to clarity and accuracy.
+  </p>
+  <div class="team-card">
+    <h3>Alex Rivera</h3>
+    <p class="role">Head of AI & Software Research</p>
+    <p>Alex specializes in B2B SaaS workflows, generative AI platforms, and productivity tech. With over 6 years of experience testing digital products, Alex oversees our comparative testing methodology.</p>
+  </div>
+</PageLayout>
+
+<style>
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .role {
+    color: var(--accent-blue);
+    font-weight: 600;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+</style>

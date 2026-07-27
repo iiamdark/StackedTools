@@ -1,0 +1,97 @@
+---
+import { SEO } from 'astro-seo';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonicalURL?: string;
+  type?: 'website' | 'article';
+  publishDate?: Date;
+  updatedDate?: Date;
+  authorName?: string;
+}
+
+const {
+  title,
+  description,
+  image = '/images/og-default.png',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  type = 'website',
+  publishDate,
+  updatedDate,
+  authorName = 'StackedTools Team'
+} = Astro.props;
+
+const siteName = 'StackedTools';
+const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+
+// Schema JSON-LD definition
+const schemaData = type === 'article' ? {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description,
+  "image": new URL(image, Astro.site).href,
+  "datePublished": publishDate ? publishDate.toISOString() : new Date().toISOString(),
+  "dateModified": updatedDate ? updatedDate.toISOString() : (publishDate ? publishDate.toISOString() : new Date().toISOString()),
+  "author": {
+    "@type": "Person",
+    "name": authorName
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": siteName,
+    "logo": {
+      "@type": "ImageObject",
+      "url": new URL('/logo.png', Astro.site).href
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL
+  }
+} : {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": siteName,
+  "url": Astro.site?.href,
+  "description": description
+};
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  
+  <SEO
+    title={fullTitle}
+    description={description}
+    canonical={canonicalURL}
+    openGraph={{
+      basic: {
+        title: fullTitle,
+        type: type,
+        image: new URL(image, Astro.site).href,
+        url: canonicalURL,
+      },
+      optional: {
+        siteName: siteName,
+        description: description,
+      }
+    }}
+    twitter={{
+      card: "summary_large_image",
+      site: "@stackedtools",
+      title: fullTitle,
+      description: description,
+      image: new URL(image, Astro.site).href,
+    }}
+  />
+
+  <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+</head>
