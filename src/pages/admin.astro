@@ -1,0 +1,796 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Admin — StackedTools" description="Content management dashboard">
+
+  <!-- LOGIN GATE -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card">
+      <div class="login-icon">🔒</div>
+      <h1>Admin Dashboard</h1>
+      <p>Enter the admin password to continue.</p>
+      <input type="password" id="login-password" placeholder="Password" class="login-input" />
+      <button id="login-btn" class="login-btn">Enter</button>
+      <p id="login-error" class="login-error" style="display:none">Invalid password. Try again.</p>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD -->
+  <div id="admin-app" class="admin-app" style="display:none">
+
+    <!-- TOP BAR -->
+    <div class="admin-topbar">
+      <div class="container topbar-inner">
+        <div class="topbar-left">
+          <h1>Content Manager</h1>
+          <span class="topbar-count" id="post-count">0 articles</span>
+        </div>
+        <div class="topbar-right">
+          <span class="saved-indicator" id="saved-indicator" style="display:none">Changes saved locally</span>
+          <button class="topbar-btn" id="export-all-btn">Export All Modified</button>
+          <button class="topbar-btn topbar-btn-outline" id="logout-btn">Logout</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container admin-body">
+
+      <!-- STATS -->
+      <div class="admin-stats" id="admin-stats">
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-total">0</span>
+          <span class="admin-stat-label">Total Articles</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-ai">0</span>
+          <span class="admin-stat-label">AI Tools</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-comparisons">0</span>
+          <span class="admin-stat-label">Comparisons</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-productivity">0</span>
+          <span class="admin-stat-label">Productivity</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-automation">0</span>
+          <span class="admin-stat-label">Automation</span>
+        </div>
+        <div class="admin-stat-card">
+          <span class="admin-stat-value" id="stat-modified">0</span>
+          <span class="admin-stat-label">Modified</span>
+        </div>
+      </div>
+
+      <!-- SEARCH + FILTERS -->
+      <div class="admin-toolbar">
+        <div class="admin-search">
+          <svg class="admin-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="admin-search" placeholder="Search articles..." class="admin-search-input" />
+        </div>
+        <div class="admin-filters" id="admin-filters">
+          <button class="admin-filter-pill active" data-cat="all">All</button>
+          <button class="admin-filter-pill" data-cat="ai-tools">AI Tools</button>
+          <button class="admin-filter-pill" data-cat="comparisons">Comparisons</button>
+          <button class="admin-filter-pill" data-cat="productivity">Productivity</button>
+          <button class="admin-filter-pill" data-cat="automation">Automation</button>
+          <button class="admin-filter-pill" data-cat="guides">Guides</button>
+          <button class="admin-filter-pill" data-cat="business-software">Business</button>
+        </div>
+      </div>
+
+      <!-- POSTS TABLE -->
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="th-title">Title</th>
+              <th class="th-category">Category</th>
+              <th class="th-date">Date</th>
+              <th class="th-status">Status</th>
+              <th class="th-actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="posts-tbody"></tbody>
+        </table>
+      </div>
+
+      <!-- EMPTY STATE -->
+      <div class="admin-empty" id="admin-empty" style="display:none">
+        <p>No articles match your search.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT MODAL -->
+  <div id="edit-modal" class="edit-modal" style="display:none">
+    <div class="edit-overlay" id="edit-overlay"></div>
+    <div class="edit-panel">
+      <div class="edit-panel-header">
+        <h2>Edit Article</h2>
+        <button class="edit-close" id="edit-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="edit-panel-body">
+        <div class="edit-field">
+          <label>Title</label>
+          <input type="text" id="edit-title" class="edit-input" />
+        </div>
+        <div class="edit-field">
+          <label>Description</label>
+          <textarea id="edit-desc" class="edit-textarea" rows="3"></textarea>
+        </div>
+        <div class="edit-row">
+          <div class="edit-field">
+            <label>Category</label>
+            <select id="edit-category" class="edit-select">
+              <option value="ai-tools">AI Tools</option>
+              <option value="comparisons">Comparisons</option>
+              <option value="productivity">Productivity</option>
+              <option value="automation">Automation</option>
+              <option value="guides">Guides</option>
+              <option value="business-software">Business Software</option>
+            </select>
+          </div>
+          <div class="edit-field">
+            <label>Author</label>
+            <input type="text" id="edit-author" class="edit-input" />
+          </div>
+        </div>
+        <div class="edit-field">
+          <label>Publication Date</label>
+          <input type="date" id="edit-date" class="edit-input" />
+        </div>
+        <div class="edit-field">
+          <label>Content (Markdown)</label>
+          <textarea id="edit-body" class="edit-textarea edit-body" rows="20"></textarea>
+        </div>
+      </div>
+      <div class="edit-panel-footer">
+        <button class="edit-btn edit-btn-outline" id="edit-preview-btn">Preview</button>
+        <div class="edit-footer-right">
+          <button class="edit-btn edit-btn-outline" id="edit-cancel-btn">Cancel</button>
+          <button class="edit-btn edit-btn-primary" id="edit-save-btn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PREVIEW MODAL -->
+  <div id="preview-modal" class="edit-modal" style="display:none">
+    <div class="edit-overlay" id="preview-overlay"></div>
+    <div class="edit-panel preview-panel">
+      <div class="edit-panel-header">
+        <h2>Preview</h2>
+        <button class="edit-close" id="preview-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="edit-panel-body">
+        <div id="preview-content" class="preview-content"></div>
+      </div>
+      <div class="edit-panel-footer">
+        <div class="edit-footer-right">
+          <button class="edit-btn edit-btn-outline" id="preview-close-btn">Close</button>
+          <button class="edit-btn edit-btn-primary" id="preview-download-btn">Download .md</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<script is:inline>
+(function() {
+  const ADMIN_KEY = 'st_admin_auth';
+  const MODIFIED_KEY = 'st_admin_modified';
+  const PASSWORD = 'stackedtools2026';
+
+  const loginScreen = document.getElementById('login-screen');
+  const adminApp = document.getElementById('admin-app');
+  const loginInput = document.getElementById('login-password');
+  const loginBtn = document.getElementById('login-btn');
+  const loginError = document.getElementById('login-error');
+  const logoutBtn = document.getElementById('logout-btn');
+
+  // Auth
+  function checkAuth() {
+    if (localStorage.getItem(ADMIN_KEY) === 'true') {
+      loginScreen.style.display = 'none';
+      adminApp.style.display = '';
+      loadPosts();
+    }
+  }
+
+  if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+      if (loginInput.value === PASSWORD) {
+        localStorage.setItem(ADMIN_KEY, 'true');
+        loginScreen.style.display = 'none';
+        adminApp.style.display = '';
+        loadPosts();
+      } else {
+        loginError.style.display = '';
+        loginInput.value = '';
+        loginInput.focus();
+      }
+    });
+    loginInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem(ADMIN_KEY);
+      location.reload();
+    });
+  }
+
+  checkAuth();
+
+  // State
+  let allPosts = [];
+  let filteredPosts = [];
+  let modifiedPosts = JSON.parse(localStorage.getItem(MODIFIED_KEY) || '{}');
+  let activeCat = 'all';
+  let searchQuery = '';
+  let currentEditId = null;
+
+  const catColors = {
+    'ai-tools': '#8b5cf6',
+    'comparisons': '#5683da',
+    'productivity': '#f59e0b',
+    'automation': '#10b981',
+    'guides': '#f472b6',
+    'business-software': '#ef4444',
+  };
+
+  // Load
+  async function loadPosts() {
+    try {
+      const res = await fetch('/api/posts.json');
+      allPosts = await res.json();
+      applyFilters();
+      updateStats();
+    } catch (err) {
+      console.error('Failed to load posts:', err);
+    }
+  }
+
+  function applyFilters() {
+    filteredPosts = allPosts.filter(p => {
+      const matchesCat = activeCat === 'all' || p.data.category === activeCat;
+      const matchesSearch = !searchQuery ||
+        p.data.title.toLowerCase().includes(searchQuery) ||
+        p.data.description.toLowerCase().includes(searchQuery) ||
+        p.data.category.toLowerCase().includes(searchQuery);
+      return matchesCat && matchesSearch;
+    });
+    renderTable();
+  }
+
+  function renderTable() {
+    const tbody = document.getElementById('posts-tbody');
+    const empty = document.getElementById('admin-empty');
+    const count = document.getElementById('post-count');
+    if (count) count.textContent = filteredPosts.length + ' articles';
+
+    if (filteredPosts.length === 0) {
+      tbody.innerHTML = '';
+      if (empty) empty.style.display = '';
+      return;
+    }
+    if (empty) empty.style.display = 'none';
+
+    tbody.innerHTML = filteredPosts.map(p => {
+      const isModified = !!modifiedPosts[p.id];
+      const color = catColors[p.data.category] || '#5683da';
+      const date = new Date(p.data.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      return `
+        <tr class="${isModified ? 'row-modified' : ''}">
+          <td class="td-title">
+            <div class="title-text">${p.data.title}</div>
+            <div class="title-desc">${p.data.description.substring(0, 80)}...</div>
+          </td>
+          <td><span class="cat-pill" style="--pc:${color}">${(p.data.category || '').replace('-', ' ')}</span></td>
+          <td class="td-date">${date}</td>
+          <td>${isModified ? '<span class="status-modified">Modified</span>' : '<span class="status-clean">Original</span>'}</td>
+          <td class="td-actions">
+            <button class="action-btn action-edit" onclick="window.__editPost('${p.id}')">Edit</button>
+            <button class="action-btn action-download" onclick="window.__downloadPost('${p.id}')">.md</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function updateStats() {
+    const total = allPosts.length;
+    const cats = { 'ai-tools': 0, 'comparisons': 0, 'productivity': 0, 'automation': 0 };
+    allPosts.forEach(p => { if (cats[p.data.category] !== undefined) cats[p.data.category]++; });
+    const modified = Object.keys(modifiedPosts).length;
+
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-ai').textContent = cats['ai-tools'];
+    document.getElementById('stat-comparisons').textContent = cats['comparisons'];
+    document.getElementById('stat-productivity').textContent = cats['productivity'];
+    document.getElementById('stat-automation').textContent = cats['automation'];
+    document.getElementById('stat-modified').textContent = modified;
+  }
+
+  // Filters
+  document.querySelectorAll('#admin-filters .admin-filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('#admin-filters .admin-filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      activeCat = pill.dataset.cat;
+      applyFilters();
+    });
+  });
+
+  const searchInput = document.getElementById('admin-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      searchQuery = e.target.value.toLowerCase().trim();
+      applyFilters();
+    });
+  }
+
+  // Edit modal
+  const editModal = document.getElementById('edit-modal');
+  const editClose = document.getElementById('edit-close');
+  const editOverlay = document.getElementById('edit-overlay');
+  const editCancel = document.getElementById('edit-cancel-btn');
+  const editSave = document.getElementById('edit-save-btn');
+  const editPreview = document.getElementById('edit-preview-btn');
+
+  function openEdit(id) {
+    const post = allPosts.find(p => p.id === id);
+    if (!post) return;
+    currentEditId = id;
+
+    const saved = modifiedPosts[id] || {};
+    document.getElementById('edit-title').value = saved.title || post.data.title;
+    document.getElementById('edit-desc').value = saved.description || post.data.description;
+    document.getElementById('edit-category').value = saved.category || post.data.category;
+    document.getElementById('edit-author').value = saved.author || post.data.author;
+    document.getElementById('edit-date').value = (saved.pubDate || post.data.pubDate).toString().split('T')[0];
+    document.getElementById('edit-body').value = saved.body || post.body;
+
+    editModal.style.display = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeEdit() {
+    editModal.style.display = 'none';
+    document.body.style.overflow = '';
+    currentEditId = null;
+  }
+
+  if (editClose) editClose.addEventListener('click', closeEdit);
+  if (editOverlay) editOverlay.addEventListener('click', closeEdit);
+  if (editCancel) editCancel.addEventListener('click', closeEdit);
+
+  if (editSave) {
+    editSave.addEventListener('click', () => {
+      if (!currentEditId) return;
+      const post = allPosts.find(p => p.id === currentEditId);
+
+      modifiedPosts[currentEditId] = {
+        title: document.getElementById('edit-title').value,
+        description: document.getElementById('edit-desc').value,
+        category: document.getElementById('edit-category').value,
+        author: document.getElementById('edit-author').value,
+        pubDate: document.getElementById('edit-date').value,
+        body: document.getElementById('edit-body').value,
+        original: {
+          title: post.data.title,
+          description: post.data.description,
+          category: post.data.category,
+          author: post.data.author,
+          pubDate: post.data.pubDate,
+          body: post.body,
+        }
+      };
+
+      localStorage.setItem(MODIFIED_KEY, JSON.stringify(modifiedPosts));
+
+      // Update allPosts too
+      post.data.title = modifiedPosts[currentEditId].title;
+      post.data.description = modifiedPosts[currentEditId].description;
+      post.data.category = modifiedPosts[currentEditId].category;
+      post.data.author = modifiedPosts[currentEditId].author;
+      post.data.pubDate = modifiedPosts[currentEditId].pubDate;
+      post.body = modifiedPosts[currentEditId].body;
+
+      const indicator = document.getElementById('saved-indicator');
+      if (indicator) { indicator.style.display = ''; setTimeout(() => { indicator.style.display = 'none'; }, 2000); }
+
+      renderTable();
+      updateStats();
+      closeEdit();
+    });
+  }
+
+  // Preview
+  const previewModal = document.getElementById('preview-modal');
+  const previewClose = document.getElementById('preview-close');
+  const previewOverlay = document.getElementById('preview-overlay');
+  const previewCloseBtn = document.getElementById('preview-close-btn');
+  const previewDownload = document.getElementById('preview-download-btn');
+
+  function closePreview() {
+    previewModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function showPreview(id) {
+    const post = allPosts.find(p => p.id === id);
+    if (!post) return;
+    currentEditId = id;
+
+    const title = document.getElementById('edit-title').value;
+    const desc = document.getElementById('edit-desc').value;
+    const category = document.getElementById('edit-category').value;
+    const author = document.getElementById('edit-author').value;
+    const pubDate = document.getElementById('edit-date').value;
+    const body = document.getElementById('edit-body').value;
+
+    const frontmatter = `---\ntitle: "${title}"\ndescription: "${desc}"\npubDate: ${pubDate}\ncategory: ${category}\nauthor: ${author}\n---\n\n`;
+    const fullMd = frontmatter + body;
+
+    // Simple markdown to HTML
+    let html = fullMd
+      .replace(/^### (.*)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.*)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.*)$/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/\n- /g, '</p><li>');
+
+    document.getElementById('preview-content').innerHTML = `<div class="preview-article"><h1>${title}</h1><p class="preview-meta">${category} &middot; ${author} &middot; ${pubDate}</p><div class="preview-body"><p>${html}</p></div></div>`;
+
+    previewModal.style.display = '';
+    document.body.style.overflow = 'hidden';
+  }
+
+  if (previewClose) previewClose.addEventListener('click', closePreview);
+  if (previewOverlay) previewOverlay.addEventListener('click', closePreview);
+  if (previewCloseBtn) previewCloseBtn.addEventListener('click', closePreview);
+
+  if (editPreview) {
+    editPreview.addEventListener('click', () => {
+      if (currentEditId) showPreview(currentEditId);
+    });
+  }
+
+  // Download
+  function downloadMd(id) {
+    const post = allPosts.find(p => p.id === id);
+    if (!post) return;
+
+    const saved = modifiedPosts[id] || {};
+    const title = saved.title || post.data.title;
+    const desc = saved.description || post.data.description;
+    const category = saved.category || post.data.category;
+    const author = saved.author || post.data.author;
+    const pubDate = saved.pubDate || post.data.pubDate;
+    const body = saved.body || post.body;
+
+    const frontmatter = `---\ntitle: "${title}"\ndescription: "${desc}"\npubDate: ${typeof pubDate === 'string' ? pubDate : new Date(pubDate).toISOString().split('T')[0]}\ncategory: ${category}\nauthor: ${author}\n---\n\n`;
+    const content = frontmatter + body;
+
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${id}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  if (previewDownload) {
+    previewDownload.addEventListener('click', () => {
+      if (currentEditId) {
+        downloadMd(currentEditId);
+        closePreview();
+      }
+    });
+  }
+
+  // Export all modified
+  const exportAllBtn = document.getElementById('export-all-btn');
+  if (exportAllBtn) {
+    exportAllBtn.addEventListener('click', () => {
+      const ids = Object.keys(modifiedPosts);
+      if (ids.length === 0) { alert('No modified articles to export.'); return; }
+      ids.forEach(id => downloadMd(id));
+    });
+  }
+
+  // Global handlers
+  window.__editPost = openEdit;
+  window.__downloadPost = downloadMd;
+})();
+</script>
+
+<style>
+  /* LOGIN */
+  .login-screen {
+    min-height: 80vh; display: flex; align-items: center; justify-content: center;
+    padding: var(--spacing-40);
+  }
+  .login-card {
+    text-align: center; max-width: 360px; width: 100%;
+    background: var(--bg-card-inner); border: 1px solid var(--border-color);
+    border-radius: var(--radius-cards); padding: var(--spacing-40);
+  }
+  .login-icon { font-size: 48px; margin-bottom: var(--spacing-16); }
+  .login-card h1 {
+    font-family: var(--font-inter); font-size: 22px; font-weight: 700;
+    color: var(--text-primary); margin-bottom: var(--spacing-8);
+  }
+  .login-card p {
+    font-family: var(--font-inter); font-size: 14px;
+    color: var(--text-secondary); margin-bottom: var(--spacing-20);
+  }
+  .login-input {
+    width: 100%; padding: 10px 14px; border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    color: var(--text-primary); font-family: var(--font-inter); font-size: 14px;
+    outline: none; margin-bottom: var(--spacing-12);
+  }
+  .login-input:focus { border-color: var(--color-electric-iris); }
+  .login-btn {
+    width: 100%; padding: 10px; border-radius: var(--radius-md);
+    background: var(--color-electric-iris); color: #fff; border: none;
+    font-family: var(--font-inter); font-size: 14px; font-weight: 600;
+    cursor: pointer; transition: opacity 200ms;
+  }
+  .login-btn:hover { opacity: 0.9; }
+  .login-error {
+    font-family: var(--font-inter); font-size: 13px;
+    color: #ef4444; margin-top: var(--spacing-12);
+  }
+
+  /* TOPBAR */
+  .admin-topbar {
+    background: var(--bg-card-inner); border-bottom: 1px solid var(--border-color);
+    padding: var(--spacing-16) 0; position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--spacing-12); }
+  .topbar-left { display: flex; align-items: center; gap: var(--spacing-12); }
+  .topbar-left h1 {
+    font-family: var(--font-inter); font-size: 20px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .topbar-count {
+    font-family: var(--font-inter); font-size: 12px; font-weight: 600;
+    color: var(--color-electric-iris); background: rgba(86,131,218,0.1);
+    padding: 3px 10px; border-radius: var(--radius-full);
+  }
+  .topbar-right { display: flex; align-items: center; gap: var(--spacing-8); }
+  .saved-indicator {
+    font-family: var(--font-inter); font-size: 12px; color: #10b981;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .topbar-btn {
+    padding: 7px 16px; border-radius: var(--radius-full);
+    background: var(--color-electric-iris); color: #fff; border: none;
+    font-family: var(--font-inter); font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: opacity 200ms;
+  }
+  .topbar-btn:hover { opacity: 0.9; }
+  .topbar-btn-outline {
+    background: transparent; border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+  }
+  .topbar-btn-outline:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+
+  /* STATS */
+  .admin-stats {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: var(--spacing-12); margin-bottom: var(--spacing-24);
+  }
+  .admin-stat-card {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md); padding: var(--spacing-16);
+    text-align: center;
+  }
+  .admin-stat-value {
+    display: block; font-family: var(--font-inter); font-size: 24px;
+    font-weight: 700; color: var(--text-primary); margin-bottom: 4px;
+  }
+  .admin-stat-label {
+    font-family: var(--font-inter); font-size: 11px;
+    color: var(--color-iron-veil); text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* TOOLBAR */
+  .admin-toolbar {
+    display: flex; flex-direction: column; gap: var(--spacing-12);
+    margin-bottom: var(--spacing-20);
+  }
+  .admin-search {
+    display: flex; align-items: center; gap: var(--spacing-8);
+    padding: var(--spacing-8) var(--spacing-12);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-cards);
+  }
+  .admin-search:focus-within { border-color: var(--color-electric-iris); }
+  .admin-search-icon { color: var(--color-iron-veil); min-width: 16px; }
+  .admin-search-input {
+    flex: 1; background: none; border: none; outline: none;
+    font-family: var(--font-inter); font-size: 14px; color: var(--text-primary);
+  }
+  .admin-search-input::placeholder { color: var(--color-iron-veil); }
+  .admin-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+  .admin-filter-pill {
+    padding: 5px 12px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    color: var(--text-secondary); font-family: var(--font-inter);
+    font-size: 12px; font-weight: 500; cursor: pointer; transition: all 200ms;
+  }
+  .admin-filter-pill:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+  .admin-filter-pill.active {
+    background: var(--color-electric-iris); color: #fff;
+    border-color: var(--color-electric-iris);
+  }
+
+  /* TABLE */
+  .admin-table-wrap { overflow-x: auto; }
+  .admin-table {
+    width: 100%; border-collapse: collapse;
+    font-family: var(--font-inter); font-size: 13px;
+  }
+  .admin-table th {
+    text-align: left; padding: var(--spacing-10) var(--spacing-12);
+    border-bottom: 2px solid var(--border-color);
+    color: var(--color-iron-veil); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .admin-table td {
+    padding: var(--spacing-10) var(--spacing-12);
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary); vertical-align: middle;
+  }
+  .admin-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .admin-table tr.row-modified td { background: rgba(16,185,129,0.03); }
+
+  .th-title { min-width: 280px; }
+  .td-title { max-width: 340px; }
+  .title-text { color: var(--text-primary); font-weight: 600; font-size: 13px; margin-bottom: 2px; }
+  .title-desc { color: var(--color-iron-veil); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 320px; }
+  .td-date { white-space: nowrap; }
+  .td-actions { white-space: nowrap; display: flex; gap: 6px; }
+
+  .cat-pill {
+    display: inline-block; padding: 2px 8px; border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--pc) 12%, transparent);
+    color: var(--pc); font-size: 11px; font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  .status-modified { color: #10b981; font-weight: 600; font-size: 12px; }
+  .status-clean { color: var(--color-iron-veil); font-size: 12px; }
+
+  .action-btn {
+    padding: 4px 10px; border-radius: var(--radius-sm);
+    font-family: var(--font-inter); font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border-subtle);
+    transition: all 150ms;
+  }
+  .action-edit {
+    background: rgba(86,131,218,0.1); color: var(--color-electric-iris);
+    border-color: rgba(86,131,218,0.2);
+  }
+  .action-edit:hover { background: var(--color-electric-iris); color: #fff; }
+  .action-download {
+    background: rgba(255,137,100,0.1); color: var(--color-ember-pulse);
+    border-color: rgba(255,137,100,0.2);
+  }
+  .action-download:hover { background: var(--color-ember-pulse); color: #fff; }
+
+  .admin-empty { text-align: center; padding: var(--spacing-48); color: var(--color-iron-veil); font-family: var(--font-inter); }
+
+  /* EDIT MODAL */
+  .edit-modal { position: fixed; inset: 0; z-index: 200; display: flex; align-items: stretch; justify-content: flex-end; }
+  .edit-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); }
+  .edit-panel {
+    position: relative; width: 100%; max-width: 640px;
+    background: var(--color-void); border-left: 1px solid var(--border-color);
+    display: flex; flex-direction: column;
+    animation: slideIn 0.3s cubic-bezier(0.23,1,0.32,1);
+  }
+  @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+  .edit-panel-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--spacing-20) var(--spacing-24);
+    border-bottom: 1px solid var(--border-color);
+  }
+  .edit-panel-header h2 {
+    font-family: var(--font-inter); font-size: 18px; font-weight: 700;
+    color: var(--text-primary);
+  }
+  .edit-close {
+    width: 32px; height: 32px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.05); border: none; color: var(--text-secondary);
+    font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 150ms;
+  }
+  .edit-close:hover { background: rgba(255,255,255,0.1); color: var(--text-primary); }
+
+  .edit-panel-body {
+    flex: 1; overflow-y: auto; padding: var(--spacing-24);
+    display: flex; flex-direction: column; gap: var(--spacing-16);
+  }
+  .edit-field { display: flex; flex-direction: column; gap: 6px; }
+  .edit-field label {
+    font-family: var(--font-inter); font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .edit-input, .edit-textarea, .edit-select {
+    width: 100%; padding: 8px 12px; border-radius: var(--radius-md);
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    color: var(--text-primary); font-family: var(--font-inter); font-size: 13px;
+    outline: none; transition: border-color 200ms;
+  }
+  .edit-input:focus, .edit-textarea:focus, .edit-select:focus { border-color: var(--color-electric-iris); }
+  .edit-textarea { resize: vertical; line-height: 1.6; }
+  .edit-body { font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 12px; min-height: 400px; }
+  .edit-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23666' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+  .edit-select option { background: #1a1a2e; color: var(--text-primary); }
+  .edit-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-12); }
+
+  .edit-panel-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: var(--spacing-16) var(--spacing-24);
+    border-top: 1px solid var(--border-color);
+  }
+  .edit-footer-right { display: flex; gap: var(--spacing-8); }
+  .edit-btn {
+    padding: 8px 18px; border-radius: var(--radius-full);
+    font-family: var(--font-inter); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 150ms;
+  }
+  .edit-btn-primary { background: var(--color-electric-iris); color: #fff; border: none; }
+  .edit-btn-primary:hover { opacity: 0.9; }
+  .edit-btn-outline {
+    background: transparent; border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+  }
+  .edit-btn-outline:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+
+  /* PREVIEW */
+  .preview-panel { max-width: 720px; }
+  .preview-content {
+    font-family: var(--font-inter); color: var(--text-secondary); line-height: 1.7;
+  }
+  .preview-article h1 {
+    font-size: 24px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: var(--spacing-8); line-height: 1.2;
+  }
+  .preview-meta {
+    font-size: 12px; color: var(--color-iron-veil); margin-bottom: var(--spacing-24);
+    text-transform: capitalize;
+  }
+  .preview-body :global(h2) { font-size: 18px; color: var(--text-primary); margin: 20px 0 8px; }
+  .preview-body :global(h3) { font-size: 16px; color: var(--text-primary); margin: 16px 0 6px; }
+  .preview-body :global(strong) { color: var(--text-primary); }
+
+  @media (max-width: 868px) {
+    .admin-stats { grid-template-columns: repeat(3, 1fr); }
+    .topbar-inner { flex-direction: column; align-items: flex-start; }
+    .edit-panel { max-width: 100%; }
+    .edit-row { grid-template-columns: 1fr; }
+  }
+</style>
