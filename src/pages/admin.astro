@@ -9,10 +9,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="login-card">
       <div class="login-icon">🔒</div>
       <h1>Admin Dashboard</h1>
-      <p>Enter the admin password to continue.</p>
+      <p>Sign in with your admin credentials.</p>
+      <input type="email" id="login-email" placeholder="Email" class="login-input" />
       <input type="password" id="login-password" placeholder="Password" class="login-input" />
-      <button id="login-btn" class="login-btn">Enter</button>
-      <p id="login-error" class="login-error" style="display:none">Invalid password. Try again.</p>
+      <button id="login-btn" class="login-btn">Sign In</button>
+      <p id="login-error" class="login-error" style="display:none">Invalid credentials. Try again.</p>
+      <p id="login-loading" class="login-error" style="display:none">Signing in...</p>
     </div>
   </div>
 
@@ -179,47 +181,72 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 </BaseLayout>
 
+<script is:inline src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script is:inline>
 (function() {
-  const ADMIN_KEY = 'st_admin_auth';
   const MODIFIED_KEY = 'st_admin_modified';
-  const PASSWORD = 'stackedtools2026';
+  const SUPABASE_URL = 'https://muhhvygrzcfuyyfkfwtb.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11aGh2eWdyemNmdXl5Zmtmd3RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxMzMxNjMsImV4cCI6MjEwMDcwOTE2M30.XuGE-4YAmetPRQz_6imyXVL7IFAwuZK9UnrL50oPACM';
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const loginScreen = document.getElementById('login-screen');
   const adminApp = document.getElementById('admin-app');
-  const loginInput = document.getElementById('login-password');
+  const loginEmail = document.getElementById('login-email');
+  const loginPassword = document.getElementById('login-password');
   const loginBtn = document.getElementById('login-btn');
   const loginError = document.getElementById('login-error');
+  const loginLoading = document.getElementById('login-loading');
   const logoutBtn = document.getElementById('logout-btn');
 
-  // Auth
-  function checkAuth() {
-    if (localStorage.getItem(ADMIN_KEY) === 'true') {
-      loginScreen.style.display = 'none';
-      adminApp.style.display = '';
-      loadPosts();
+  function showDashboard() {
+    loginScreen.style.display = 'none';
+    adminApp.style.display = '';
+    loadPosts();
+  }
+
+  async function checkAuth() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      showDashboard();
     }
   }
 
   if (loginBtn) {
-    loginBtn.addEventListener('click', () => {
-      if (loginInput.value === PASSWORD) {
-        localStorage.setItem(ADMIN_KEY, 'true');
-        loginScreen.style.display = 'none';
-        adminApp.style.display = '';
-        loadPosts();
-      } else {
+    loginBtn.addEventListener('click', async () => {
+      const email = loginEmail.value.trim();
+      const password = loginPassword.value;
+      if (!email || !password) {
+        loginError.textContent = 'Enter email and password.';
         loginError.style.display = '';
-        loginInput.value = '';
-        loginInput.focus();
+        return;
+      }
+      loginError.style.display = 'none';
+      loginLoading.style.display = '';
+      loginBtn.disabled = true;
+
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+      loginLoading.style.display = 'none';
+      loginBtn.disabled = false;
+
+      if (error) {
+        loginError.textContent = 'Invalid credentials. Try again.';
+        loginError.style.display = '';
+        loginPassword.value = '';
+        loginPassword.focus();
+      } else {
+        showDashboard();
       }
     });
-    loginInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+    loginPassword.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
+    loginEmail.addEventListener('keydown', (e) => { if (e.key === 'Enter') loginBtn.click(); });
   }
 
   if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem(ADMIN_KEY);
+    logoutBtn.addEventListener('click', async () => {
+      await supabaseClient.auth.signOut();
+      localStorage.removeItem(MODIFIED_KEY);
       location.reload();
     });
   }
