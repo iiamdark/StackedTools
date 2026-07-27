@@ -1,5 +1,5 @@
 ---
-import { Bot, Zap, GitCompare, Workflow, Briefcase, BookOpen, ChevronRight, Menu, X } from 'lucide-astro';
+import { Bot, Zap, GitCompare, Workflow, Briefcase, BookOpen, ChevronRight, Menu, X, Sun, Moon } from 'lucide-astro';
 
 const navItems = [
   { name: 'AI Tools', href: '/ai-tools', icon: Bot },
@@ -32,16 +32,84 @@ const navItems = [
       })}
     </nav>
 
-    <div class="header-cta">
+    <div class="header-actions">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <Sun class="theme-icon sun-icon" />
+        <Moon class="theme-icon moon-icon" />
+      </button>
+
       <a href="/guides" class="btn-tactile btn-primary-tactile nav-btn">
         <span>Explore Guides</span>
         <div class="btn-icon-wrapper">
           <ChevronRight class="btn-icon" />
         </div>
       </a>
+
+      <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">
+        <Menu class="menu-icon" />
+      </button>
     </div>
   </div>
+
+  <div class="mobile-nav" id="mobile-nav">
+    <div class="mobile-nav-header">
+      <span class="mobile-nav-title">Menu</span>
+      <button class="mobile-close-btn" id="mobile-close-btn" aria-label="Close menu">
+        <X class="close-icon" />
+      </button>
+    </div>
+    <nav class="mobile-nav-list">
+      {navItems.map(item => {
+        const Icon = item.icon;
+        return (
+          <a href={item.href} class="mobile-nav-link">
+            <Icon class="mobile-nav-icon" />
+            <span>{item.name}</span>
+          </a>
+        );
+      })}
+      <a href="/guides" class="mobile-nav-link mobile-cta">
+        <BookOpen class="mobile-nav-icon" />
+        <span>Explore Guides</span>
+      </a>
+    </nav>
+  </div>
 </header>
+
+<script is:inline>
+  function initTheme() {
+    const saved = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = saved || (prefersDark ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+    return theme;
+  }
+  initTheme();
+
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  });
+
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-nav')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+
+  document.getElementById('mobile-close-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-nav')?.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('mobile-nav')?.classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  });
+</script>
 
 <style>
   .site-header {
@@ -135,6 +203,42 @@ const navItems = [
     transform: translateY(-1px);
   }
 
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-8);
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 200ms var(--ease-out-strong);
+  }
+
+  .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+
+  .theme-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  :global(html[data-theme="dark"]) .sun-icon { display: block; }
+  :global(html[data-theme="dark"]) .moon-icon { display: none; }
+  :global(html[data-theme="light"]) .sun-icon { display: none; }
+  :global(html[data-theme="light"]) .moon-icon { display: block; }
+
   .nav-btn {
     padding: var(--spacing-8) var(--spacing-20);
     font-size: var(--text-caption);
@@ -145,9 +249,146 @@ const navItems = [
     height: 14px;
   }
 
+  .mobile-menu-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 200ms var(--ease-out-strong);
+  }
+
+  .mobile-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+  }
+
+  .menu-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    background: var(--color-void);
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 300ms var(--ease-out-strong);
+  }
+
+  .mobile-nav.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-16) var(--spacing-24);
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .mobile-nav-title {
+    font-family: var(--font-inter);
+    font-size: var(--text-body-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+  }
+
+  .mobile-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  .close-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mobile-nav-list {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-16) var(--spacing-24);
+    gap: var(--spacing-4);
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-12);
+    padding: var(--spacing-12) var(--spacing-16);
+    border-radius: var(--radius-cards);
+    color: var(--text-secondary);
+    font-family: var(--font-inter);
+    font-size: var(--text-body-lg);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    transition: all 200ms var(--ease-out-strong);
+  }
+
+  .mobile-nav-link:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+  }
+
+  .mobile-nav-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--color-iron-veil);
+  }
+
+  .mobile-nav-link:hover .mobile-nav-icon {
+    color: var(--color-electric-iris);
+  }
+
+  .mobile-cta {
+    margin-top: var(--spacing-16);
+    background: rgba(86, 131, 218, 0.08);
+    border: 1px solid rgba(86, 131, 218, 0.15);
+    color: var(--color-electric-iris);
+  }
+
+  .mobile-cta:hover {
+    background: rgba(86, 131, 218, 0.15);
+    color: var(--color-electric-iris);
+  }
+
   @media (max-width: 1024px) {
     .desktop-nav {
       display: none;
+    }
+
+    .nav-btn {
+      display: none;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+    }
+
+    .mobile-nav {
+      display: flex;
     }
   }
 </style>

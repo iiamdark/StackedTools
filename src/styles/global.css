@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
 :root {
   /* Colors */
   --color-obsidian-canvas: #303236;
@@ -279,4 +277,83 @@ body {
 
 .animate-pulse-subtle {
   animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+/* ── Light Theme ── */
+html[data-theme="light"] {
+  --bg-dark: var(--surface-light-canvas);
+  --bg-card: var(--surface-linen);
+  --bg-card-inner: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --glass-backdrop: blur(20px) saturate(180%);
+
+  --text-primary: var(--color-void);
+  --text-secondary: var(--color-iron-veil);
+  --text-muted: var(--color-slate-edge);
+
+  --border-color: rgba(74, 75, 80, 0.2);
+  --border-subtle: rgba(74, 75, 80, 0.1);
+
+  --accent-blue: var(--color-electric-iris);
+  --accent-purple: var(--color-ember-pulse);
+}
+
+html[data-theme="light"] body {
+  background: var(--surface-light-canvas);
+  color: var(--color-void);
+}
+
+html[data-theme="light"] .double-bezel {
+  background: rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
+}
+
+html[data-theme="light"] .double-bezel:hover {
+  box-shadow: var(--shadow-md);
+}
+
+html[data-theme="light"] .btn-secondary-tactile {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html[data-theme="light"] .btn-secondary-tactile:hover {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+html[data-theme="light"] .desktop-nav {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+html[data-theme="light"] .nav-link:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+html[data-theme="light"] .btn-icon-wrapper {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+html[data-theme="light"] .theme-toggle {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html[data-theme="light"] .theme-toggle:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] .mobile-menu-btn {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+html[data-theme="light"] .badge {
+  background: rgba(86, 131, 218, 0.08);
+}
+
+html[data-theme="light"] .badge-purple {
+  background: rgba(255, 137, 100, 0.08);
+}
+
+html[data-theme="light"] .site-footer {
+  background: var(--surface-linen);
+  border-top-color: var(--border-color);
 }
