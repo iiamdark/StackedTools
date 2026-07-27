@@ -8,5 +8,11 @@ import { defineConfig } from 'astro/config';
 export default defineConfig({
 	site: 'https://stacked-tools.vercel.app',
 	integrations: [mdx(), sitemap()],
+	i18n: {
+		defaultLocale: 'en',
+		locales: ['en', 'es'],
+		routing: {
+			prefixDefaultLocale: false,
+		},
+	},
 });
-

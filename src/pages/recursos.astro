@@ -1,56 +1,133 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { BookOpen, ExternalLink, Sparkles, Code, Zap, Bot, Palette, BarChart3, Shield, Globe, Terminal, Layers, Mail, Database, GitCompare, Calendar } from 'lucide-astro';
+import { BookOpen, ExternalLink, Sparkles, Code, Zap, Bot, GraduationCap, FileText, Users, Globe, Terminal, Layers, Mail, Database, GitCompare, Calendar, Shield, BarChart3, Palette, Map, Star, Wrench, Search } from 'lucide-astro';
 
 const categories = [
   {
-    name: 'Desarrollo',
-    description: 'Herramientas core para construir software moderno',
+    name: 'AI & Coding Assistants',
+    description: 'AI-powered tools that write, review and ship code alongside you',
+    color: '#8b5cf6',
+    icon: Bot,
+    tools: [
+      { name: 'Cursor', desc: 'AI code editor with Composer for multi-file edits and codebase understanding', url: 'https://cursor.com', icon: Terminal, tag: 'AI Editor' },
+      { name: 'GitHub Copilot', desc: 'AI pair programmer inline in your editor with chat and code review', url: 'https://github.com/features/copilot', icon: Bot, tag: 'AI Coding' },
+      { name: 'OpenAI Codex', desc: 'Command center for controlling AI agents. Work with multiple agents in parallel', url: 'https://openai.com/codex', icon: Bot, tag: 'Agents' },
+      { name: 'OpenClaw', desc: 'Personal AI assistant that runs on your devices. Connects with WhatsApp, Telegram, Slack', url: 'https://github.com/openclaw/openclaw', icon: Bot, tag: 'Assistant' },
+      { name: 'Spec Kit', desc: 'AI-powered specification-driven development toolkit for Claude Code, Gemini CLI, Codex', url: 'https://speckit.org', icon: Code, tag: 'Specs' },
+      { name: 'CodexBar', desc: 'App that shows your AI subscription usage. Compatible with Claude, Gemini, Cursor', url: 'https://github.com/steipete/CodexBar', icon: BarChart3, tag: 'Usage' },
+      { name: 'System Prompts Collection', desc: 'Collection of system prompts extracted from ChatGPT, Claude, Gemini and Grok', url: 'https://github.com/asgeirtj/system_prompts_leaks', icon: Search, tag: 'Prompts' },
+      { name: 'Cursor Fundamentals', desc: 'Official Cursor course in Spanish. 6 modules covering AI, agents, MCP and more', url: 'https://cursor.com/es/learn', icon: GraduationCap, tag: 'Course' },
+      { name: 'Agent Skills with Anthropic', desc: 'Free Anthropic course on Agent Skills. Learn to create skills for Claude Code', url: 'https://www.deeplearning.ai/short-courses/agent-skills-with-anthropic/', icon: GraduationCap, tag: 'Course' },
+    ],
+  },
+  {
+    name: 'Development',
+    description: 'Core tools and platforms for building modern software',
     color: '#5683da',
     icon: Code,
     tools: [
-      { name: 'Cursor', desc: 'AI code editor con Composer para ediciones multi-archivo', url: 'https://cursor.com', icon: Terminal, tag: 'AI Editor' },
-      { name: 'Vercel', desc: 'Deploy instantáneo para Next.js, Astro, SvelteKit', url: 'https://vercel.com', icon: Layers, tag: 'Deploy' },
-      { name: 'Supabase', desc: 'Backend open source: PostgreSQL, Auth, Storage, Edge Functions', url: 'https://supabase.com', icon: Database, tag: 'BaaS' },
-      { name: 'Linear', desc: 'Issue tracker rápido para equipos de ingeniería', url: 'https://linear.app', icon: GitCompare, tag: 'Project Mgmt' },
-      { name: 'GitHub Copilot', desc: 'AI pair programmer inline en tu editor', url: 'https://github.com/features/copilot', icon: Bot, tag: 'AI Coding' },
-      { name: 'Railway', desc: 'Deploy de apps fullstack con databases managed', url: 'https://railway.app', icon: Zap, tag: 'Hosting' },
+      { name: 'Vercel', desc: 'Instant deploys for Next.js, Astro, SvelteKit with edge computing', url: 'https://vercel.com', icon: Layers, tag: 'Deploy' },
+      { name: 'Supabase', desc: 'Open source backend: PostgreSQL, Auth, Storage, Edge Functions', url: 'https://supabase.com', icon: Database, tag: 'BaaS' },
+      { name: 'Linear', desc: 'Fast, minimal issue tracker for engineering teams', url: 'https://linear.app', icon: GitCompare, tag: 'Project Mgmt' },
+      { name: 'Railway', desc: 'Fullstack app deploys with managed databases', url: 'https://railway.app', icon: Zap, tag: 'Hosting' },
+      { name: 'npkill', desc: 'CLI tool to find and delete unused node_modules folders. Free up gigabytes', url: 'https://npkill.js.org', icon: Wrench, tag: 'CLI' },
+      { name: 'Kokonut UI', desc: '100+ open-source animated components built with Tailwind and shadcn/ui', url: 'https://github.com/kokonut-labs/kokonutui', icon: Palette, tag: 'UI Kit' },
     ],
   },
   {
-    name: 'Productividad',
-    description: 'Organiza tu trabajo y maximiza tu tiempo',
+    name: 'Productivity',
+    description: 'Organize your work and maximize your time',
     color: '#f59e0b',
     icon: Zap,
     tools: [
-      { name: 'Raycast', desc: 'Launcher macOS con AI, snippets y extensiones', url: 'https://raycast.com', icon: Zap, tag: 'Launcher' },
-      { name: 'Notion', desc: 'All-in-one workspace: notas, databases, project management', url: 'https://notion.so', icon: BookOpen, tag: 'Workspace' },
-      { name: 'Todoist', desc: 'Gestor de tareas con NLP y vistas múltiples', url: 'https://todoist.com', icon: BarChart3, tag: 'Tasks' },
-      { name: 'Arc Browser', desc: 'Browser con sidebar, Spaces y AI integrado', url: 'https://arc.net', icon: Globe, tag: 'Browser' },
-      { name: '1Password', desc: 'Password manager con passkeys y team sharing', url: 'https://1password.com', icon: Shield, tag: 'Security' },
-      { name: 'Cal.com', desc: 'Scheduling open source auto-hosted', url: 'https://cal.com', icon: Calendar, tag: 'Scheduling' },
+      { name: 'Raycast', desc: 'macOS launcher with AI, snippets and extensions', url: 'https://raycast.com', icon: Zap, tag: 'Launcher' },
+      { name: 'Notion', desc: 'All-in-one workspace: notes, databases, project management', url: 'https://notion.so', icon: BookOpen, tag: 'Workspace' },
+      { name: 'Todoist', desc: 'Task manager with NLP and multiple views', url: 'https://todoist.com', icon: BarChart3, tag: 'Tasks' },
+      { name: 'Arc Browser', desc: 'Browser with sidebar, Spaces and built-in AI', url: 'https://arc.net', icon: Globe, tag: 'Browser' },
+      { name: '1Password', desc: 'Password manager with passkeys and team sharing', url: 'https://1password.com', icon: Shield, tag: 'Security' },
+      { name: 'Cal.com', desc: 'Open source scheduling, self-hosted', url: 'https://cal.com', icon: Calendar, tag: 'Scheduling' },
     ],
   },
   {
-    name: 'Automatización',
-    description: 'Conecta tus apps y elimina trabajo manual',
+    name: 'Automation',
+    description: 'Connect your apps and eliminate manual work',
     color: '#10b981',
-    icon: Bot,
+    icon: Zap,
     tools: [
-      { name: 'Zapier', desc: '6,000+ integraciones no-code para conectar todo', url: 'https://zapier.com', icon: Zap, tag: 'No-Code' },
-      { name: 'Make', desc: 'Automatización visual con flujos complejos', url: 'https://make.com', icon: Layers, tag: 'Visual' },
-      { name: 'n8n', desc: 'Automatización open source self-hosted', url: 'https://n8n.io', icon: Terminal, tag: 'Open Source' },
-      { name: 'Resend', desc: 'Email transaccional con API moderna y React Email', url: 'https://resend.com', icon: Mail, tag: 'Email' },
-      { name: 'Upstash', desc: 'Serverless Redis y QStash para queues', url: 'https://upstash.com', icon: Database, tag: 'Serverless' },
+      { name: 'Zapier', desc: '6,000+ no-code integrations to connect everything', url: 'https://zapier.com', icon: Zap, tag: 'No-Code' },
+      { name: 'Make', desc: 'Visual automation platform with complex workflows', url: 'https://make.com', icon: Layers, tag: 'Visual' },
+      { name: 'n8n', desc: 'Open source automation, self-hosted', url: 'https://n8n.io', icon: Terminal, tag: 'Open Source' },
+      { name: 'Resend', desc: 'Transactional email with modern API and React Email', url: 'https://resend.com', icon: Mail, tag: 'Email' },
+      { name: 'Upstash', desc: 'Serverless Redis and QStash for queues', url: 'https://upstash.com', icon: Database, tag: 'Serverless' },
       { name: 'Pipedream', desc: 'Connect APIs with code when you need it', url: 'https://pipedream.com', icon: Code, tag: 'API' },
+    ],
+  },
+  {
+    name: 'Learning',
+    description: 'Courses, challenges and resources to level up your skills',
+    color: '#f472b6',
+    icon: GraduationCap,
+    tools: [
+      { name: 'freeCodeCamp', desc: 'Learn to code for free with professional certifications. 3000+ hours of content', url: 'https://www.freecodecamp.org', icon: GraduationCap, tag: 'Free' },
+      { name: 'AdventJS', desc: 'JavaScript, TypeScript and Python advent calendar with daily coding challenges', url: 'https://adventjs.dev', icon: Code, tag: 'Challenges' },
+      { name: 'Python MOOC - Helsinki', desc: 'Complete Python course from zero to advanced with official university certificate', url: 'https://programming-24.mooc.fi', icon: GraduationCap, tag: 'Certificate' },
+      { name: 'KodeKloud Free Labs', desc: 'Practice Kubernetes, Docker, Terraform in free cloud environments in your browser', url: 'https://kodekloud.com/free-labs/kubernetes', icon: Terminal, tag: 'DevOps' },
+      { name: 'JSCamp Bootcamp', desc: 'JavaScript bootcamp exercises from midudev with real projects', url: 'https://github.com/midudev/jscamp', icon: Code, tag: 'Bootcamp' },
+      { name: 'NVIDIA Deep Learning', desc: 'Free AI courses by NVIDIA. GenAI, neural networks, LLM agents with certification', url: 'https://www.nvidia.com/en-us/training/', icon: Bot, tag: 'Free' },
+      { name: '500+ AI Projects', desc: 'Massive repo with 500 AI, ML, Deep Learning, Computer Vision and NLP projects with code', url: 'https://github.com/ashishpatel26/500-AI-Machine-learning-Deep-learning-Computer-vision-NLP-Projects-with-code', icon: Bot, tag: 'Projects' },
+      { name: 'LLM Engineer Toolkit', desc: '120+ curated libraries for AI/LLM organized by development phase', url: 'https://github.com/KalyanKS-NLP/llm-engineer-toolkit', icon: Bot, tag: 'Libraries' },
+    ],
+  },
+  {
+    name: 'Documentation',
+    description: 'Official docs and references you will actually use',
+    color: '#06b6d4',
+    icon: FileText,
+    tools: [
+      { name: 'MDN Web Docs', desc: 'Definitive web docs by Mozilla. HTML, CSS, JavaScript and browser APIs', url: 'https://developer.mozilla.org', icon: FileText, tag: 'Reference' },
+      { name: 'React Documentation', desc: 'Official React docs with hooks, Server Components and modern best practices', url: 'https://react.dev', icon: Code, tag: 'Frontend' },
+      { name: 'web.dev', desc: 'Google guides, codelabs and best practices for modern web development', url: 'https://web.dev', icon: Globe, tag: 'Google' },
+    ],
+  },
+  {
+    name: 'Roadmaps & Career',
+    description: 'Visual guides to plan your developer career path',
+    color: '#ef4444',
+    icon: Map,
+    tools: [
+      { name: 'Developer Roadmaps', desc: 'Step-by-step visual guides for Frontend, Backend, DevOps and more', url: 'https://roadmap.sh', icon: Map, tag: 'Roadmaps' },
+    ],
+  },
+  {
+    name: 'Free Tools & Templates',
+    description: 'Free hosting, APIs, templates and developer resources',
+    color: '#22c55e',
+    icon: Star,
+    tools: [
+      { name: 'Free for Developers', desc: 'Massive list of free tools: hosting, APIs, databases, CI/CD and more', url: 'https://free-for.dev', icon: Star, tag: 'Free' },
+      { name: 'GitHub Student Dev Pack', desc: '$200k+ in free credits and tools for students. Hosting, domains, courses', url: 'https://education.github.com/pack', icon: GraduationCap, tag: 'Students' },
+      { name: 'Public APIs', desc: 'Collective list of free public APIs: weather, news, finance, entertainment', url: 'https://github.com/public-apis/public-apis', icon: Globe, tag: 'APIs' },
+      { name: 'HTML Templates', desc: '1000+ free HTML templates. Responsive, modern, Bootstrap and Tailwind', url: 'https://htmltemplates.co', icon: Palette, tag: 'Templates' },
+      { name: 'UIdeck', desc: '2000+ free HTML templates and UI kits for React, Vue, Astro, Next.js', url: 'https://uideck.com', icon: Palette, tag: 'UI Kit' },
+      { name: 'Awesome Lists', desc: 'Meta-list of curated lists on every topic: languages, frameworks, tools', url: 'https://github.com/sindresorhus/awesome', icon: Star, tag: 'Curated' },
+    ],
+  },
+  {
+    name: 'Community',
+    description: 'Where developers help each other grow',
+    color: '#a855f7',
+    icon: Users,
+    tools: [
+      { name: 'Stack Overflow', desc: 'Largest developer Q&A community. Millions of questions and answers', url: 'https://stackoverflow.com', icon: Users, tag: 'Q&A' },
+      { name: 'DEV Community', desc: 'Developer community with articles, tutorials and discussions', url: 'https://dev.to', icon: BookOpen, tag: 'Blog' },
     ],
   },
 ];
 ---
 
 <BaseLayout
-  title="Recursos — StackedTools"
-  description="Herramientas, guías y recursos útiles para desarrolladores, creadores y equipos de productividad."
+  title="Resources — StackedTools"
+  description="Tools, guides and useful resources for developers, creators and productivity teams."
 >
 
   <!-- ============ HERO ============ -->
@@ -59,19 +136,19 @@ const categories = [
     <div class="container">
       <div class="hero-badge anim-fade-up" style="--delay:.1s">
         <Sparkles class="hero-badge-icon" />
-        <span>Curated Tools</span>
+        <span>Curated Resources</span>
       </div>
       <h1 class="anim-fade-up" style="--delay:.2s">
-        Herramientas que<br/>
-        <span class="hero-gradient">nuestro equipo usa a diario</span>
+        Tools Our Team<br/>
+        <span class="hero-gradient">Uses Every Day</span>
       </h1>
       <p class="hero-sub anim-fade-up" style="--delay:.35s">
-        Recomendaciones reales, sin patrocinios. Cada herramienta ha sido probada por nuestro equipo en proyectos reales.
+        Real recommendations, no sponsorships. Every tool has been tested by our team on real projects.
       </p>
       <div class="hero-stats anim-fade-up" style="--delay:.5s">
-        <div class="stat-pill"><span class="stat-num">{categories.reduce((a, c) => a + c.tools.length, 0)}</span> Herramientas</div>
-        <div class="stat-pill"><span class="stat-num">{categories.length}</span> Categorías</div>
-        <div class="stat-pill"><span class="stat-num">100%</span> Probadas</div>
+        <div class="stat-pill"><span class="stat-num">{categories.reduce((a, c) => a + c.tools.length, 0)}</span> Resources</div>
+        <div class="stat-pill"><span class="stat-num">{categories.length}</span> Categories</div>
+        <div class="stat-pill"><span class="stat-num">100%</span> Tested</div>
       </div>
     </div>
   </section>
@@ -81,7 +158,7 @@ const categories = [
     {categories.map((cat, ci) => {
       const CatIcon = cat.icon;
       return (
-        <section class="category-section reveal" style={`--delay:${ci * 0.1}s`}>
+        <section class="category-section reveal" style={`--delay:${Math.min(ci * 0.08, 0.3)}s`}>
           <div class="category-header">
             <div class="category-icon-box" style={`--cat-color:${cat.color}`}>
               <CatIcon class="category-icon" />
@@ -95,7 +172,7 @@ const categories = [
             {cat.tools.map((tool, ti) => {
               const ToolIcon = tool.icon;
               return (
-                <a href={tool.url} target="_blank" rel="noopener" class="tool-card" style={`--delay:${ti * 0.05}s; --cat-color:${cat.color}`}>
+                <a href={tool.url} target="_blank" rel="noopener" class="tool-card" style={`--delay:${ti * 0.04}s; --cat-color:${cat.color}`}>
                   <div class="tool-card-top">
                     <div class="tool-icon-box" style={`--cat-color:${cat.color}`}>
                       <ToolIcon class="tool-icon" />
@@ -120,12 +197,11 @@ const categories = [
   const reveals = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target); } });
-  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  }, { threshold: 0.06, rootMargin: '0px 0px -20px 0px' });
   reveals.forEach(el => io.observe(el));
 </script>
 
 <style>
-  /* ── HERO ── */
   .recursos-hero {
     position: relative; z-index: 1;
     padding: 160px 0 50px; text-align: center; overflow: hidden;
@@ -176,10 +252,8 @@ const categories = [
   }
   @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
-  /* ── PAGE ── */
   .recursos-page { padding-bottom: var(--spacing-160); }
 
-  /* ── CATEGORY ── */
   .category-section { margin-bottom: var(--spacing-56); }
   .category-header {
     display: flex; align-items: center; gap: var(--spacing-16);
@@ -202,7 +276,6 @@ const categories = [
     font-family: var(--font-inter); font-size: 14px; color: var(--text-secondary); margin: 0;
   }
 
-  /* ── TOOLS GRID ── */
   .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -258,7 +331,6 @@ const categories = [
     line-height: 1.5; margin: 0;
   }
 
-  /* ── REVEAL ── */
   .reveal {
     opacity: 0; transform: translateY(24px);
     transition: opacity 0.5s cubic-bezier(0.23,1,0.32,1), transform 0.5s cubic-bezier(0.23,1,0.32,1);
@@ -266,7 +338,6 @@ const categories = [
   }
   .reveal.revealed { opacity: 1; transform: translateY(0); }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 868px) {
     .recursos-hero { padding: 140px 0 30px; }
     .category-header { flex-direction: column; align-items: flex-start; gap: var(--spacing-12); }
