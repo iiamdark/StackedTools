@@ -48,23 +48,35 @@ const features = [
 
   <!-- ============ HERO ============ -->
   <section class="hero">
+    <div class="hero-glow" aria-hidden="true"></div>
     <div class="container hero-inner">
       <div class="hero-badge anim-fade-up" style="--delay:.1s">
         <Sparkles class="hero-badge-icon" />
         <span>StackedTools Portal 2026</span>
       </div>
 
-      <h1 class="hero-title anim-fade-up" style="--delay:.25s">
-        Discover, Compare &<br />
-        <span class="hero-gradient">Master the Best</span><br />
-        Digital Tools
+      <h1 class="hero-title" aria-label="Discover, Compare & Master the Best Digital Tools">
+        <span class="hero-line hero-line-1">
+          <span class="hero-word" style="--i:0">Discover,</span>
+          <span class="hero-word" style="--i:1">Compare</span>
+          <span class="hero-word hero-amp" style="--i:2">&amp;</span>
+        </span>
+        <span class="hero-line hero-line-2">
+          <span class="hero-word hero-gradient" style="--i:3">Master</span>
+          <span class="hero-word hero-gradient" style="--i:4">the</span>
+          <span class="hero-word hero-gradient" style="--i:5">Best</span>
+        </span>
+        <span class="hero-line hero-line-3">
+          <span class="hero-word" style="--i:6">Digital</span>
+          <span class="hero-word hero-word-ember" style="--i:7">Tools</span>
+        </span>
       </h1>
 
-      <p class="hero-subtitle anim-fade-up" style="--delay:.4s">
+      <p class="hero-subtitle anim-fade-up" style="--delay:1.6s">
         In-depth reviews, head-to-head software comparisons, and no-code automation guides for modern creators, developers, and growth teams.
       </p>
 
-      <div class="hero-actions anim-fade-up" style="--delay:.55s">
+      <div class="hero-actions anim-fade-up" style="--delay:1.8s">
         <a href="#categories" class="btn-tactile btn-primary-tactile">
           <span>Explore Categories</span>
           <div class="btn-icon-wrapper"><ArrowRight class="btn-icon" /></div>
@@ -76,7 +88,7 @@ const features = [
       </div>
 
       <!-- Stats Bar -->
-      <div class="stats-bar anim-fade-up" style="--delay:.7s">
+      <div class="stats-bar anim-fade-up" style="--delay:2.0s">
         {stats.map(s => {
           const Icon = s.icon;
           return (
@@ -298,13 +310,32 @@ const features = [
   .hero {
     position: relative;
     z-index: 1;
-    padding: 180px 0 80px;
+    padding: 160px 0 80px;
     text-align: center;
+    overflow: hidden;
   }
+  .hero-glow {
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(86, 131, 218, 0.18) 0%, rgba(255, 137, 100, 0.06) 45%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    animation: heroGlowPulse 8s ease-in-out infinite;
+  }
+  @keyframes heroGlowPulse {
+    0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.08); }
+  }
+
   .hero-inner {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
   .hero-badge {
     display: inline-flex;
@@ -324,25 +355,79 @@ const features = [
   }
   .hero-badge-icon { width: 14px; height: 14px; }
 
+  /* ── HERO TITLE (massive animated) ── */
   .hero-title {
     font-family: var(--font-inter);
-    font-size: clamp(36px, 7vw, 72px);
     font-weight: var(--font-weight-bold);
-    line-height: 1.05;
-    margin-bottom: var(--spacing-24);
-    letter-spacing: -0.04em;
-    max-width: 800px;
+    line-height: 1.0;
+    letter-spacing: -0.06em;
+    margin-bottom: var(--spacing-28);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
+  .hero-line {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.3em;
+    flex-wrap: wrap;
+  }
+  .hero-line-1 { font-size: clamp(44px, 8.5vw, 100px); }
+  .hero-line-2 { font-size: clamp(52px, 10vw, 120px); }
+  .hero-line-3 { font-size: clamp(44px, 8.5vw, 100px); }
+
+  .hero-word {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(80px) rotateX(40deg);
+    animation: wordReveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation-delay: calc(0.15s + var(--i) * 0.12s);
+    text-shadow: 0 2px 30px rgba(0,0,0,0.4);
+  }
+  @keyframes wordReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(80px) rotateX(40deg) scale(0.9);
+      filter: blur(8px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  .hero-amp {
+    font-style: italic;
+    opacity: 0.5;
+    color: var(--text-secondary);
+    font-size: 0.7em;
+    align-self: center;
+  }
+
   .hero-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, var(--color-electric-iris) 45%, var(--color-ember-pulse) 100%);
+    background: linear-gradient(135deg, #ffffff 0%, var(--color-electric-iris) 35%, var(--color-ember-pulse) 70%, #ffffff 100%);
+    background-size: 300% 300%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-size: 200% 200%;
-    animation: gradientShift 6s ease infinite;
+    background-clip: text;
+    animation: wordReveal 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards,
+               gradientShift 5s ease infinite;
+    animation-delay: calc(0.15s + var(--i) * 0.12s), 0s;
+    position: relative;
   }
+
+  .hero-word-ember {
+    color: var(--color-ember-pulse);
+    text-shadow: 0 0 60px rgba(255, 137, 100, 0.3), 0 0 120px rgba(255, 137, 100, 0.1);
+  }
+
   @keyframes gradientShift {
     0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    25% { background-position: 100% 0%; }
+    50% { background-position: 100% 100%; }
+    75% { background-position: 0% 100%; }
   }
 
   .hero-subtitle {
@@ -597,13 +682,21 @@ const features = [
   /* ── RESPONSIVE ── */
   @media (max-width: 868px) {
     .hero { padding: 140px 0 60px; }
-    .hero-title { font-size: clamp(28px, 8vw, 48px); }
+    .hero-line-1 { font-size: clamp(32px, 9vw, 56px); }
+    .hero-line-2 { font-size: clamp(38px, 11vw, 68px); }
+    .hero-line-3 { font-size: clamp(32px, 9vw, 56px); }
+    .hero-glow { width: 500px; height: 300px; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); }
     .features-grid { grid-template-columns: 1fr; }
     .category-grid, .posts-grid { grid-template-columns: 1fr; }
     .hero-actions { flex-direction: column; width: 100%; }
   }
   @media (max-width: 480px) {
+    .hero { padding: 120px 0 40px; }
+    .hero-line-1 { font-size: clamp(28px, 10vw, 40px); }
+    .hero-line-2 { font-size: clamp(34px, 12vw, 52px); }
+    .hero-line-3 { font-size: clamp(28px, 10vw, 40px); }
+    .hero-line { gap: 0.2em; }
     .stats-bar { grid-template-columns: 1fr 1fr; }
     .stat-item { padding: var(--spacing-16) var(--spacing-12); }
   }
