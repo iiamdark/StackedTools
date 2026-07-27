@@ -1,0 +1,133 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Contact Us"
+  description="Have questions, software review inquiries, or partnership proposals? Reach out to the StackedTools team."
+>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <h2>Get in Touch</h2>
+      <p>
+        Whether you have a question about our reviews, want to request a software comparison, or wish to report outdated pricing data, we're here to help.
+      </p>
+      
+      <div class="info-card">
+        <h3>Editorial Office</h3>
+        <p>StackedTools Media Ltd.</p>
+        <p>Email: <strong>contact@stackedtools.online</strong></p>
+        <p>Privacy Inquiries: <strong>privacy@stackedtools.online</strong></p>
+      </div>
+
+      <div class="info-card">
+        <h3>Response Time</h3>
+        <p>We aim to respond to all editorial and business inquiries within 24-48 business hours.</p>
+      </div>
+    </div>
+
+    <div class="contact-form-wrapper double-bezel">
+      <form action="https://formspree.io/f/placeholder" method="POST" class="contact-form double-bezel-inner">
+        <h3>Send us a message</h3>
+        
+        <div class="form-group">
+          <label for="name">Your Name</label>
+          <input type="text" id="name" name="name" placeholder="Alex Rivera" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" placeholder="alex@example.com" required />
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <select id="subject" name="subject">
+            <option value="general">General Inquiry</option>
+            <option value="review-request">Software Review Request</option>
+            <option value="correction">Data / Pricing Correction</option>
+            <option value="partnership">Partnership / Advertising</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" placeholder="How can we help you?" required></textarea>
+        </div>
+
+        <button type="submit" class="btn-tactile btn-primary-tactile">
+          <span>Send Message</span>
+          <div class="btn-icon-wrapper">→</div>
+        </button>
+      </form>
+    </div>
+  </div>
+</PageLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 1rem;
+  }
+
+  .info-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-inner);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .info-card h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: #09090d;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    color: var(--text-primary);
+    font-family: var(--font-family);
+    font-size: 0.9375rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+  }
+
+  @media (max-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>
