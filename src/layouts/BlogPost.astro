@@ -5,10 +5,23 @@ import AdUnit from '../components/AdUnit.astro';
 import ReadingProgress from '../components/ReadingProgress.astro';
 import NewsletterCTA from '../components/NewsletterCTA.astro';
 import BackToTop from '../components/BackToTop.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+type Props = CollectionEntry<'blog'>['data'] & {
+  headings?: Array<{ depth: number; slug: string; text: string }>;
+  relatedPosts?: Array<{ id: string; title: string; description: string; category: string; pubDate: Date; slug: string }>;
+};
 
-const { title, description, pubDate, updatedDate, author = 'StackedTools Team' } = Astro.props;
+const { title, description, pubDate, updatedDate, author = 'StackedTools Team', headings = [], relatedPosts = [] } = Astro.props;
+
+const catColors: Record<string, string> = {
+  'ai-tools': '#8b5cf6',
+  'comparisons': '#5683da',
+  'productivity': '#f59e0b',
+  'automation': '#10b981',
+  'guides': '#f472b6',
+  'business-software': '#ef4444',
+};
 ---
 
 <BaseLayout title={title} description={description} type="article" publishDate={pubDate} updatedDate={updatedDate} authorName={author}>
@@ -37,11 +50,35 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
 
       <AdUnit slotId="1000000001" format="auto" />
 
-      <div class="article-body prose">
-        <slot />
+      <div class="article-layout">
+        {headings.length > 0 && (
+          <aside class="article-toc-sidebar">
+            <TableOfContents headings={headings} />
+          </aside>
+        )}
+
+        <div class="article-body prose">
+          <slot />
+        </div>
       </div>
 
       <AdUnit slotId="1000000002" format="auto" />
+
+      {relatedPosts.length > 0 && (
+        <div class="related-posts">
+          <h2 class="related-title">Related Articles</h2>
+          <div class="related-grid">
+            {relatedPosts.map(rp => (
+              <a href={`/blog/${rp.slug}`} class="related-card">
+                <span class="related-cat" style={`--rc:${catColors[rp.category] || '#5683da'}`}>{rp.category.replace('-', ' ')}</span>
+                <h3 class="related-card-title">{rp.title}</h3>
+                <p class="related-card-desc">{rp.description.substring(0, 120)}...</p>
+                <time class="related-card-date">{new Date(rp.pubDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</time>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div class="author-box">
         <h3>About {author}</h3>
@@ -93,6 +130,27 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
     line-height: var(--leading-body-lg);
     margin-bottom: var(--spacing-24);
     letter-spacing: var(--tracking-body-lg);
+  }
+
+  .article-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-32);
+  }
+
+  @media (min-width: 1100px) {
+    .article-layout {
+      grid-template-columns: 220px 1fr;
+    }
+    .article-toc-sidebar {
+      order: -1;
+    }
+  }
+
+  @media (max-width: 1099px) {
+    .article-toc-sidebar {
+      display: none;
+    }
   }
 
   .author-bar {
@@ -267,5 +325,82 @@ const { title, description, pubDate, updatedDate, author = 'StackedTools Team' }
     font-size: var(--text-body);
     color: var(--text-secondary);
     letter-spacing: var(--tracking-body);
+  }
+
+  /* RELATED POSTS */
+  .related-posts {
+    margin-top: var(--spacing-64);
+    padding-top: var(--spacing-40);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .related-title {
+    font-family: var(--font-inter);
+    font-size: var(--text-heading);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-24);
+    letter-spacing: var(--tracking-heading);
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-20);
+  }
+
+  .related-card {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-24);
+    background: var(--bg-card-inner);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-cards);
+    text-decoration: none;
+    transition: border-color 200ms, transform 200ms;
+  }
+
+  .related-card:hover {
+    border-color: var(--color-electric-iris);
+    transform: translateY(-2px);
+  }
+
+  .related-cat {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: color-mix(in srgb, var(--rc) 12%, transparent);
+    color: var(--rc);
+    font-family: var(--font-inter);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: var(--spacing-12);
+    width: fit-content;
+  }
+
+  .related-card-title {
+    font-family: var(--font-inter);
+    font-size: 16px;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: var(--spacing-8);
+    letter-spacing: -0.01em;
+  }
+
+  .related-card-desc {
+    font-family: var(--font-inter);
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-12);
+    flex: 1;
+  }
+
+  .related-card-date {
+    font-family: var(--font-inter);
+    font-size: 12px;
+    color: var(--color-iron-veil);
   }
 </style>

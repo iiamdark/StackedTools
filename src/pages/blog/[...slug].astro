@@ -5,14 +5,12 @@ import { supabase } from '../../lib/supabase';
 import { marked } from 'marked';
 
 export async function getStaticPaths() {
-  // 1. Fetch local Markdown posts
   const localPosts = await getCollection('blog');
   const localPaths = localPosts.map((post) => ({
     params: { slug: post.id },
     props: { type: 'local' as const, post },
   }));
 
-  // 2. Fetch live published posts from Supabase DB
   let dbPaths: Array<{ params: { slug: string }; props: any }> = [];
   try {
     const { data, error } = await supabase
@@ -26,9 +24,7 @@ export async function getStaticPaths() {
         props: { type: 'db' as const, post: item },
       }));
     }
-  } catch (e) {
-    // Graceful fallback
-  }
+  } catch (e) {}
 
   return [...localPaths, ...dbPaths];
 }
@@ -41,15 +37,31 @@ let updatedDate: Date | undefined;
 let author = 'StackedTools Team';
 let htmlContent = '';
 let RenderedContent: any = null;
+let headings: Array<{ depth: number; slug: string; text: string }> = [];
+let relatedPosts: Array<{ id: string; title: string; description: string; category: string; pubDate: Date; slug: string }> = [];
 
 if (props.type === 'local') {
-  const { Content } = await render(props.post);
-  RenderedContent = Content;
+  const result = await render(props.post);
+  RenderedContent = result.Content;
+  headings = result.headings;
   title = props.post.data.title;
   description = props.post.data.description;
   pubDate = props.post.data.pubDate;
   updatedDate = props.post.data.updatedDate;
   author = props.post.data.author || 'StackedTools Team';
+
+  const allPosts = await getCollection('blog');
+  relatedPosts = allPosts
+    .filter(p => p.id !== props.post.id && p.data.category === props.post.data.category)
+    .slice(0, 3)
+    .map(p => ({
+      id: p.id,
+      title: p.data.title,
+      description: p.data.description,
+      category: p.data.category || '',
+      pubDate: p.data.pubDate,
+      slug: p.slug,
+    }));
 } else {
   title = props.post.title;
   description = props.post.description;
@@ -60,7 +72,7 @@ if (props.type === 'local') {
 }
 ---
 
-<BlogPost title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} author={author}>
+<BlogPost title={title} description={description} pubDate={pubDate} updatedDate={updatedDate} author={author} headings={headings} relatedPosts={relatedPosts}>
   {props.type === 'local' ? (
     <RenderedContent />
   ) : (
