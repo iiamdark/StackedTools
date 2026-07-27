@@ -296,6 +296,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     checkAuth();
 
+    // State
+    var allPosts = [];
+    var filteredPosts = [];
+    var modifiedPosts = JSON.parse(localStorage.getItem(MODIFIED_KEY) || '{}');
+    var activeCat = 'all';
+    var searchQuery = '';
+    var currentEditId = null;
+
+    var catColors = {
+      'ai-tools': '#8b5cf6',
+      'comparisons': '#5683da',
+      'productivity': '#f59e0b',
+      'automation': '#10b981',
+      'guides': '#f472b6',
+      'business-software': '#ef4444',
+    };
+
+    function loadPosts() {
+      fetch('/api/posts.json')
+        .then(function(res) { return res.json(); })
+        .then(function(posts) {
+          allPosts = posts;
+          applyFilters();
+          updateStats();
+        })
+        .catch(function(err) { console.error('Failed to load posts:', err); });
+    }
+
   function applyFilters() {
     filteredPosts = allPosts.filter(p => {
       const matchesCat = activeCat === 'all' || p.data.category === activeCat;
