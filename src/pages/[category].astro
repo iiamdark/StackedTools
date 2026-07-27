@@ -19,10 +19,46 @@ export async function getStaticPaths() {
   }));
 }
 
+import { supabase } from '../lib/supabase';
+
 const { category } = Astro.props;
 const Icon = category.icon;
-const allPosts = await getCollection('blog');
-const posts = allPosts.filter(post => post.data.category === category.slug);
+
+// Fetch local Markdown posts
+const allLocalPosts = await getCollection('blog');
+const localPosts = allLocalPosts
+  .filter(post => post.data.category === category.slug)
+  .map(post => ({
+    title: post.data.title,
+    slug: post.slug,
+    description: post.data.description,
+    author: post.data.author || 'StackedTools Team',
+    pubDate: post.data.pubDate
+  }));
+
+// Fetch live published posts from Supabase DB
+let dbPosts: Array<{ title: string; slug: string; description: string; author: string; pubDate: Date }> = [];
+try {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('*')
+    .eq('category_slug', category.slug)
+    .eq('published', true);
+
+  if (!error && data) {
+    dbPosts = data.map(item => ({
+      title: item.title,
+      slug: item.slug,
+      description: item.description,
+      author: item.author,
+      pubDate: new Date(item.created_at)
+    }));
+  }
+} catch (e) {
+  // Graceful fallback if offline
+}
+
+const posts = [...dbPosts, ...localPosts];
 ---
 
 <BaseLayout title={`${category.name} — StackedTools`} description={category.description}>
@@ -44,8 +80,8 @@ const posts = allPosts.filter(post => post.data.category === category.slug);
           <div class="double-bezel post-bezel">
             <article class="post-card double-bezel-inner">
               <a href={`/blog/${post.slug}/`}>
-                <h2>{post.data.title}</h2>
-                <p>{post.data.description}</p>
+                <h2>{post.title}</h2>
+                <p>{post.description}</p>
                 <div class="card-footer">
                   <span class="read-more">
                     <span>Read article</span>
